@@ -14,14 +14,14 @@ From 10.2 version helm chart is not used directly. Use operator based installati
 
 Get the chart by cloning this repository:
 ```bash
-git clone https://github.com/xebialabs/xl-deploy-kubernetes-helm-chart.git
+git clone https://github.com/digital-ai/deploy-helm-chart.git
 ```
 The [Parameters](#parameters) section lists the parameters that can be configured before installation starts.
 Before installing helm charts, you need to update the dependencies of a chart:
 ```bash
-helm dependency update xl-deploy-kubernetes-helm-chart
+helm dependency update deploy-helm-chart
 ```
 To install the chart with the release name `xld-production`:
 ```bash
-helm install xld-production xl-deploy-kubernetes-helm-chart
+helm install xld-production deploy-helm-chart
 ```

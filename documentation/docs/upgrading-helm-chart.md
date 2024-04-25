@@ -19,7 +19,7 @@ From 23.3 version this document is outdated. Use official Digital.ai documentati
 To upgrade the version `ImageTag` parameter needs to be updated to the desired version. To see the list of available ImageTag for Digital.ai Deploy, refer the following links [Deploy_tags](https://hub.docker.com/r/xebialabs/xl-deploy/tags). For upgrade, Rolling Update strategy is used.
 To upgrade the chart with the release name `xld-production`, execute below command: 
 ```bash
-helm upgrade xld-production xl-deploy-kubernetes-helm-chart/
+helm upgrade xld-production deploy-helm-chart/
 ```
 
 :::note

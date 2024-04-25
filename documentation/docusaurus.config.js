@@ -4,13 +4,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 module.exports = {
   title: 'Deploy Kubernetes Helm Chart',
   tagline: '',
-  url: 'https://xebialabs.github.io',
-  baseUrl: '/xl-deploy-kubernetes-helm-chart/',
+  url: 'https://digital-ai.github.io',
+  baseUrl: '/deploy-helm-chart/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/digital_ai_deploy.svg',
   organizationName: 'Digital.ai',
-  projectName: 'xl-deploy-kubernetes-helm-chart',
+  projectName: 'deploy-helm-chart',
   themeConfig: {
     navbar: {
       title: 'Deploy Kubernetes Helm Chart',
@@ -27,7 +27,7 @@ module.exports = {
         },
 
         {
-          href: 'https://github.com/xebialabs/xl-deploy-kubernetes-helm-chart',
+          href: 'https://github.com/digital-ai/deploy-helm-chart',
           label: 'GitHub',
           position: 'right',
         }
@@ -45,7 +45,7 @@ module.exports = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/xebialabs/xl-deploy-kubernetes-helm-chart',
+              href: 'https://github.com/digital-ai/deploy-helm-chart',
             },
           ],
         },
