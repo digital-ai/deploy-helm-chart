@@ -3,20 +3,20 @@ const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
 module.exports = {
-  title: 'Deploy Kubernetes Helm Chart',
+  title: 'Digital.ai Deploy Kubernetes Helm Chart',
   tagline: '',
-  url: 'https://xebialabs.github.io',
-  baseUrl: '/xl-deploy-kubernetes-helm-chart/',
+  url: 'https://digital-ai.github.io',
+  baseUrl: '/deploy-helm-chart/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/digital_ai_deploy.svg',
   organizationName: 'Digital.ai',
-  projectName: 'xl-deploy-kubernetes-helm-chart',
+  projectName: 'deploy-helm-chart',
   themeConfig: {
     navbar: {
       title: 'Deploy Kubernetes Helm Chart',
       logo: {
-        alt: 'Deploy Kubernetes Helm Chart Digital.ai',
+        alt: 'Digital.ai Deploy Kubernetes Helm Chart',
         src: 'img/digital_ai_deploy.svg',
       },
       items: [
@@ -28,7 +28,7 @@ module.exports = {
         },
 
         {
-          href: 'https://github.com/xebialabs/xl-deploy-kubernetes-helm-chart',
+          href: 'https://github.com/digital-ai/deploy-helm-chart',
           label: 'GitHub',
           position: 'right',
         }
@@ -46,7 +46,7 @@ module.exports = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/xebialabs/xl-deploy-kubernetes-helm-chart',
+              href: 'https://github.com/digital-ai/deploy-helm-chart',
             },
           ],
         },
