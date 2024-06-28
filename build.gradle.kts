@@ -51,7 +51,8 @@ val kubeRbacProxyImage = properties["kubeRbacProxyImage"]?.toString()
 val os = detectOs()
 val arch = detectHostArch()
 val currentTime = Instant.now().toString()
-val dockerHubRepository = System.getenv()["DOCKER_HUB_REPOSITORY"] ?: "xebialabsunsupported"
+val releaseRepository = System.getenv()["RELEASE_REGISTRY"] ?: "xebialabsunsupported"
+val dockerHubRepository = System.getenv()["DOCKER_HUB_REPOSITORY"] ?: releaseRepository
 val releasedVersion = System.getenv()["RELEASE_EXPLICIT"] ?: "24.3.0-${
     LocalDateTime.now().format(DateTimeFormatter.ofPattern("Mdd.Hmm"))
 }"
@@ -140,7 +141,7 @@ tasks {
     }
 
     val operatorImageUrl = "docker.io/$dockerHubRepository/deploy-operator:$releasedVersion"
-    val bundleImageUrl = "docker.io/$dockerHubRepository/deploy-operator-bundle:$releasedVersion"
+    val bundleImageUrl = "docker.io/$releaseRepository/deploy-operator-bundle:$releasedVersion"
     val buildXldDir = layout.buildDirectory.dir("xld")
     val buildXldOperatorDir = layout.buildDirectory.dir("xld/${project.name}")
     val operatorFolder = projectDir.resolve("operator")
@@ -387,6 +388,10 @@ tasks {
                     commandLine(kustomizeCli, "edit", "set", "image", kubeRbacProxyImage)
                 }
             }
+            delete {
+                delete("${targetDockerFile}.bak")
+                delete("${targetWatchesFile}.bak")
+            }
             logger.lifecycle("Build operator image $operatorImageUrl finished")
         }
     }
@@ -415,6 +420,7 @@ tasks {
         val targetDockerFile = buildXldDir.get().dir("bundle.Dockerfile")
         val sourceAnnotationsFile = operatorFolder.resolve("annotations.yaml")
         val targetAnnotationsFile = buildXldDir.get().dir("bundle").dir("metadata").dir("annotations.yaml")
+        val targetCsvFile = buildXldDir.get().dir("config/manifests/bases/xld.clusterserviceversion.yaml")
 
         doFirst {
             // config/**/*.yaml -> config
@@ -449,14 +455,14 @@ tasks {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${VERSION}#$releasedVersion#g",
-                    buildXldDir.get().dir("config/manifests/bases/xld.clusterserviceversion.yaml"))
+                    targetCsvFile)
             }
             // config/manifests/bases/xlr.clusterserviceversion.yaml replace APP_VERSION
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${APP_VERSION}#$releasedAppVersion#g",
-                    buildXldDir.get().dir("config/manifests/bases/xld.clusterserviceversion.yaml"))
+                    targetCsvFile)
             }
             // config/custom/manager_config_patch.yaml replace APP_VERSION
             exec {
@@ -465,19 +471,33 @@ tasks {
                     "-e", "s#\${APP_VERSION}#$releasedAppVersion#g",
                     buildXldDir.get().dir("config/custom/manager_config_patch.yaml"))
             }
+            // config/manifests/bases/xlr.clusterserviceversion.yaml replace DOCKER_HUB_REPOSITORY
+            exec {
+                workingDir(buildXldDir)
+                commandLine("sed", "-i.bak",
+                    "-e", "s#\${DOCKER_HUB_REPOSITORY}#$dockerHubRepository#g",
+                    targetCsvFile)
+            }
+            // config/custom/manager_config_patch.yaml replace DOCKER_HUB_REPOSITORY
+            exec {
+                workingDir(buildXldDir)
+                commandLine("sed", "-i.bak",
+                    "-e", "s#\${DOCKER_HUB_REPOSITORY}#$dockerHubRepository#g",
+                    buildXldDir.get().dir("config/custom/manager_config_patch.yaml"))
+            }
             // config/manifests/bases/xlr.clusterserviceversion.yaml replace CONTAINER_IMAGE
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${CONTAINER_IMAGE}#$operatorImageUrl#g",
-                    buildXldDir.get().dir("config/manifests/bases/xld.clusterserviceversion.yaml"))
+                    targetCsvFile)
             }
             // config/manifests/bases/xlr.clusterserviceversion.yaml replace CURRENT_TIME
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${CURRENT_TIME}#$currentTime#g",
-                    buildXldDir.get().dir("config/manifests/bases/xld.clusterserviceversion.yaml"))
+                    targetCsvFile)
             }
         }
         doLast {
@@ -501,6 +521,11 @@ tasks {
                 commandLine("sed", "-i.bak",
                     "-e", "/^\$/d",
                     targetAnnotationsFile)
+            }
+            delete {
+                delete("${targetAnnotationsFile}.bak")
+                delete("${targetDockerFile}.bak")
+                delete("${targetCsvFile}.bak")
             }
             logger.lifecycle("Build operator bundle finished")
         }
