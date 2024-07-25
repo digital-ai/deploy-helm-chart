@@ -242,7 +242,7 @@ tasks {
 
     register<Exec>("runHelmLint") {
         group = "helm-test"
-        dependsOn("prepareHelmDeps")
+        dependsOn("prepareHelmDepsHotfix")
 
         commandLine(helmCli, "lint", "-f", "tests/values/basic.yaml")
 
@@ -253,7 +253,7 @@ tasks {
 
     register<Exec>("installHelmUnitTestPlugin") {
         group = "helm-test"
-        dependsOn("prepareHelmDeps")
+        dependsOn("prepareHelmDepsHotfix")
 
         commandLine(helmCli, "plugin", "list")
 
@@ -281,7 +281,7 @@ tasks {
 
     register<Exec>("buildHelmPackage") {
         group = "helm"
-        dependsOn("prepareHelmDeps")
+        dependsOn("prepareHelmDepsHotfix")
         workingDir(buildXldDir)
         commandLine(helmCli, "package", "--app-version=$releasedAppVersion", project.name)
 
@@ -340,7 +340,7 @@ tasks {
 
     register<Exec>("buildOperatorImage") {
         group = "operator"
-        dependsOn("installKustomize", "buildOperatorApi")
+        dependsOn("installKustomize", "buildOperatorApiHotfix")
         workingDir(buildXldDir)
         commandLine("make", "docker-build",
             "IMG=$operatorImageUrl", operatorSdkCliVar, kustomizeCliVar)
@@ -410,7 +410,7 @@ tasks {
 
     register<Exec>("buildOperatorBundle") {
         group = "operator-bundle"
-        dependsOn("installKustomize", "buildOperatorApi")
+        dependsOn("installKustomize", "buildOperatorApiHotfix")
         workingDir(buildXldDir)
         commandLine("make", "bundle",
             "IMG=$operatorImageUrl", "BUNDLE_GEN_FLAGS=--overwrite --version=$releasedVersion --channels=$operatorBundleChannels --package=digitalai-deploy-operator --use-image-digests",
@@ -450,14 +450,14 @@ tasks {
                 workingDir(buildXldDir.get().dir("config/default"))
                 commandLine(kustomizeCli, "edit", "add", "resource", "../custom")
             }
-            // config/manifests/bases/xlr.clusterserviceversion.yaml replace VERSION
+            // config/manifests/bases/xld.clusterserviceversion.yaml replace VERSION
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${VERSION}#$releasedVersion#g",
                     targetCsvFile)
             }
-            // config/manifests/bases/xlr.clusterserviceversion.yaml replace APP_VERSION
+            // config/manifests/bases/xld.clusterserviceversion.yaml replace APP_VERSION
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
@@ -471,7 +471,7 @@ tasks {
                     "-e", "s#\${APP_VERSION}#$releasedAppVersion#g",
                     buildXldDir.get().dir("config/custom/manager_config_patch.yaml"))
             }
-            // config/manifests/bases/xlr.clusterserviceversion.yaml replace DOCKER_HUB_REPOSITORY
+            // config/manifests/bases/xld.clusterserviceversion.yaml replace DOCKER_HUB_REPOSITORY
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
@@ -485,14 +485,14 @@ tasks {
                     "-e", "s#\${DOCKER_HUB_REPOSITORY}#$dockerHubRepository#g",
                     buildXldDir.get().dir("config/custom/manager_config_patch.yaml"))
             }
-            // config/manifests/bases/xlr.clusterserviceversion.yaml replace CONTAINER_IMAGE
+            // config/manifests/bases/xld.clusterserviceversion.yaml replace CONTAINER_IMAGE
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${CONTAINER_IMAGE}#$operatorImageUrl#g",
                     targetCsvFile)
             }
-            // config/manifests/bases/xlr.clusterserviceversion.yaml replace CURRENT_TIME
+            // config/manifests/bases/xld.clusterserviceversion.yaml replace CURRENT_TIME
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
@@ -629,6 +629,62 @@ tasks {
         group = "docusaurus"
         dependsOn(named("docBuild"))
     }
+
+    val postgresqlSubchart = "postgresql-15.4.0.tgz"
+
+    register("prepareHelmDepsHotfix") {
+        group = "helm-hotfix"
+        dependsOn(
+            named("prepareHelmDeps")
+        )
+    }
+
+    // hotfix operator
+    val operatorChartDir = layout.buildDirectory.dir("xld/helm-charts/digitalai-deploy/charts")
+
+    // postgresql
+    val postgresqlOperatorChart = operatorChartDir.get().file(postgresqlSubchart)
+
+    register<Exec>("hotfixPostgresqlOperatorChart") {
+        group = "operator-hotfix"
+        dependsOn(named("buildOperatorApi"))
+        doFirst {
+            copy {
+                from(tarTree(postgresqlOperatorChart))
+                into(operatorChartDir.get())
+            }
+            delete(postgresqlOperatorChart)
+        }
+        workingDir(operatorChartDir.get())
+        commandLine("yq", "-i",
+            ".volumePermissions.containerSecurityContext.seLinuxOptions=null", "postgresql/values.yaml")
+
+        doLast {
+            logger.lifecycle("Hotfix Postgresql operator helm chart")
+        }
+    }
+
+    register<Tar>("hotfixPostgresqlOperatorChartPackage") {
+        group = "operator-hotfix"
+        dependsOn(named("hotfixPostgresqlOperatorChart"))
+        from(operatorChartDir)
+        include("postgresql/**")
+        archiveFileName.set(postgresqlSubchart)
+        destinationDirectory.set(file(operatorChartDir))
+        compression = Compression.GZIP
+    }
+
+    register("buildOperatorApiHotfix") {
+        group = "operator-hotfix"
+        dependsOn(
+            named("hotfixPostgresqlOperatorChartPackage"),
+            named("buildOperatorApi")
+        )
+        doLast {
+            delete(operatorChartDir.get().dir("postgresql"))
+        }
+    }
+
 }
 
 tasks.withType<AbstractPublishToMaven> {
