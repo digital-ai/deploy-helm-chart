@@ -230,8 +230,17 @@ hooks:
         content: |
           #!/bin/bash
 
+          SECRET_NAME="{{ include "common.tplvalues.render" ( dict "value" $.Values.hooks.getLicense.name "context" $ ) }}"
           FILE_PATH="/opt/xebialabs/xl-deploy-server/conf/deployit-license.lic"
-          kubectl create secret generic {{ include "common.tplvalues.render" ( dict "value" $.Values.hooks.getLicense.name "context" $ ) }} --from-file=$FILE_PATH
+          
+          if kubectl get secret "$SECRET_NAME" > /dev/null 2>&1; then
+            echo "Secret '$SECRET_NAME' exists skipping creation."
+          else
+            kubectl create secret generic $SECRET_NAME \
+              --from-file=$FILE_PATH \
+              --dry-run=client \
+              -o yaml | kubectl apply -f -
+          fi
 
   genSelfSigned:
     ## @param hooks.genSelfSigned.enabled set to true to support self-signed ket auto generation by using helm hook
@@ -326,9 +335,19 @@ hooks:
         content: |
           #!/bin/bash
 
+          SECRET_NAME="{{ include "common.tplvalues.render" ( dict "value" $.Values.hooks.genSelfSigned.name "context" $ ) }}"
           KEYSTORE_FILE_PATH="/opt/xebialabs/xl-deploy-server/conf/keystore.{{- .Values.ssl.keystoreType -}}"
           CERT_FILE_PATH="/opt/xebialabs/xl-deploy-server/conf/public.cert"
-          kubectl create secret generic {{ include "common.tplvalues.render" ( dict "value" $.Values.hooks.genSelfSigned.name "context" $ ) }} --from-file=$KEYSTORE_FILE_PATH --from-file=$CERT_FILE_PATH
+          
+          if kubectl get secret "$SECRET_NAME" > /dev/null 2>&1; then
+            echo "Secret '$SECRET_NAME' exists skipping creation."
+          else
+            kubectl create secret generic $SECRET_NAME \
+              --from-file=$KEYSTORE_FILE_PATH \
+              --from-file=$CERT_FILE_PATH \
+              --dry-run=client \
+              -o yaml | kubectl apply -f -
+          fi
 
 ## @section Deploy satellite parameters
 ##
