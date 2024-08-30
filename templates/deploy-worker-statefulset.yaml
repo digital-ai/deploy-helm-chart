@@ -218,6 +218,11 @@ spec:
           resources: {{- toYaml .Values.worker.volumePermissions.resources | nindent 12 }}
           {{- end }}
           volumeMounts:
+            {{- range $path := .Values.worker.persistence.emptyDirPaths }}
+            - name: data-dir
+              mountPath: {{ $path }}
+              subPath: {{ regexFind "[^/]+$" $path }}
+            {{- end }}
             {{- range $path := .Values.worker.persistence.paths }}
             - name: data-dir
               mountPath: {{ $path }}
@@ -393,6 +398,11 @@ spec:
               subPath: {{ include "secrets.key" (dict "secretRef" .Values.truststore.truststore "default" "truststore" "context" $) }}
               readOnly: true
             {{- end }}
+            {{- range $path := .Values.worker.persistence.emptyDirPaths }}
+            - name: data-dir
+              mountPath: {{ $path }}
+              subPath: {{ regexFind "[^/]+$" $path }}
+            {{- end }}
             {{- range $path := .Values.worker.persistence.paths }}
             - name: data-dir
               mountPath: {{ $path }}
@@ -438,6 +448,10 @@ spec:
         {{- end }}
         {{- if .Values.worker.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.worker.extraVolumes "context" $)  | nindent 8 }}
+        {{- end }}
+        {{- if .Values.worker.persistence.emptyDirPaths }}
+        - name: empty-dir
+          emptyDir: {}
         {{- end }}
         {{- if not .Values.worker.persistence.enabled }}
         - name: data-dir

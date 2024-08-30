@@ -192,6 +192,7 @@ hooks:
       enabled: true
       runAsNonRoot: true
       allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
       capabilities:
         drop:
         - ALL
@@ -296,6 +297,7 @@ hooks:
       enabled: true
       runAsNonRoot: true
       allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
       capabilities:
         drop:
         - ALL
@@ -645,6 +647,7 @@ centralConfiguration:
     enabled: true
     runAsNonRoot: true
     allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
     capabilities:
       drop:
       - ALL
@@ -729,9 +732,11 @@ centralConfiguration:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
     ## Init container' Security Context
     ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
     ## and not the below volumePermissions.containerSecurityContext.runAsUser
@@ -742,6 +747,8 @@ centralConfiguration:
     ## @skip centralConfiguration.volumePermissions.containerSecurityContext.seccompProfile
     ##
     containerSecurityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
       runAsUser: 0
       runAsGroup: 0
       runAsNonRoot: false
@@ -810,6 +817,9 @@ centralConfiguration:
       helm.sh/resource-policy: "keep"
     ## @param centralConfiguration.persistence.paths mounted paths for the Deploy master
     paths: []
+    emptyDirPaths: 
+      - /tmp
+      - /opt/xebialabs/central-configuration-server/log
 
   ## @section Central Configuration Deploy runtime parameters
   ##
@@ -1451,6 +1461,7 @@ master:
     enabled: true
     runAsNonRoot: true
     allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
     capabilities:
       drop:
       - ALL
@@ -1465,9 +1476,11 @@ master:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
   ## @param master.initContainers Add init containers to the deploy master pod
   ## Example:
   ## initContainers:
@@ -1546,9 +1559,11 @@ master:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
     ## Init container' Security Context
     ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
     ## and not the below volumePermissions.containerSecurityContext.runAsUser
@@ -1559,6 +1574,8 @@ master:
     ## @skip master.volumePermissions.containerSecurityContext.seccompProfile
     ##
     containerSecurityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
       runAsUser: 0
       runAsGroup: 0
       runAsNonRoot: false
@@ -1628,6 +1645,8 @@ master:
     ## @param master.persistence.paths mounted paths for the Deploy master
     paths:
       - /opt/xebialabs/xl-deploy-server/work
+    emptyDirPaths: 
+      - /tmp
 
   ## @section Master runtime parameters
   ##
@@ -2303,6 +2322,7 @@ worker:
     enabled: true
     runAsNonRoot: true
     allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
     capabilities:
       drop:
       - ALL
@@ -2317,9 +2337,11 @@ worker:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
   ## @param worker.initContainers Add init containers to the Deploy worker pod
   ## Example:
   ## initContainers:
@@ -2398,9 +2420,11 @@ worker:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
     ## Init container' Security Context
     ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
     ## and not the below volumePermissions.containerSecurityContext.runAsUser
@@ -2411,6 +2435,8 @@ worker:
     ## @skip worker.volumePermissions.containerSecurityContext.seccompProfile
     ##
     containerSecurityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
       runAsUser: 0
       runAsGroup: 0
       runAsNonRoot: false
@@ -2480,6 +2506,8 @@ worker:
     ## @param worker.persistence.paths mounted paths for the Deploy worker
     paths:
       - /opt/xebialabs/deploy-task-engine/work
+    emptyDirPaths: 
+      - /tmp
 
   ## @section Worker runtime parameters
   ##
@@ -3396,6 +3424,15 @@ postgresql:
     ## @param postgresql.volumePermissions.image.tag Init container volume-permissions image tag (immutable tags are recommended)
     image:
       tag: 12-debian-12-r24
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      seLinuxOptions: {}
+      runAsUser: 0
+      runAsGroup: 0
+      runAsNonRoot: false
+      seccompProfile:
+        type: RuntimeDefault
 
 ## @section RabbitMQ
 ##
@@ -3490,6 +3527,7 @@ rabbitmq:
   ## @skip rabbitmq.containerSecurityContext.seccompProfile
   containerSecurityContext:
     allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
     capabilities:
       drop:
       - ALL
@@ -3534,6 +3572,8 @@ rabbitmq:
     ## @extra rabbitmq.volumePermissions.containerSecurityContext.seccompProfile Set volume permissions init container's Security Context seccompProfile
     ## @skip rabbitmq.volumePermissions.containerSecurityContext.seccompProfile
     containerSecurityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
       runAsUser: 0
       runAsGroup: 0
       runAsNonRoot: false

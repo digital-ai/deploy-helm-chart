@@ -105,6 +105,11 @@ spec:
           resources: {{- toYaml .Values.centralConfiguration.volumePermissions.resources | nindent 12 }}
           {{- end }}
           volumeMounts:
+          {{- range $path := .Values.centralConfiguration.persistence.emptyDirPaths }}
+            - name: data-dir
+              mountPath: {{ $path }}
+              subPath: {{ regexFind "[^/]+$" $path }}
+          {{- end }}
           {{- range $path := .Values.centralConfiguration.persistence.paths }}
             - name: data-dir
               mountPath: {{ $path }}
@@ -297,11 +302,16 @@ spec:
               mountPath: /opt/xebialabs/central-configuration-server/{{ $v.path }}
               subPath: {{ $v.path }}
             {{- end }}
+            {{- range $path := .Values.centralConfiguration.persistence.emptyDirPaths }}
+            - name: data-dir
+              mountPath: {{ $path }}
+              subPath: {{ regexFind "[^/]+$" $path }}
+            {{- end }}
             {{- range $path := .Values.centralConfiguration.persistence.paths }}
             - name: data-dir
               mountPath: {{ $path }}
               subPath: {{ regexFind "[^/]+$" $path }}
-            {{- end }}            
+            {{- end }}
             {{- if .Values.centralConfiguration.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.centralConfiguration.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -337,6 +347,10 @@ spec:
         {{- end }}
         {{- if .Values.centralConfiguration.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.centralConfiguration.extraVolumes "context" $)  | nindent 8 }}
+        {{- end }}
+        {{- if .Values.centralConfiguration.persistence.emptyDirPaths }}
+        - name: empty-dir
+          emptyDir: {}
         {{- end }}
         {{- if not .Values.centralConfiguration.persistence.enabled }}
         - name: data-dir
