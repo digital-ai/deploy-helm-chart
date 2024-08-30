@@ -729,9 +729,11 @@ centralConfiguration:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
     ## Init container' Security Context
     ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
     ## and not the below volumePermissions.containerSecurityContext.runAsUser
@@ -1465,9 +1467,11 @@ master:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
   ## @param master.initContainers Add init containers to the deploy master pod
   ## Example:
   ## initContainers:
@@ -1546,9 +1550,11 @@ master:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
     ## Init container' Security Context
     ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
     ## and not the below volumePermissions.containerSecurityContext.runAsUser
@@ -2317,9 +2323,11 @@ worker:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
   ## @param worker.initContainers Add init containers to the Deploy worker pod
   ## Example:
   ## initContainers:
@@ -2398,9 +2406,11 @@ worker:
       limits:
         cpu: "150m"
         memory: "192Mi"
+        ephemeral-storage: "2Gi"
       requests:
         cpu: "100m"
         memory: "128Mi"
+        ephemeral-storage: "50Mi"
     ## Init container' Security Context
     ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
     ## and not the below volumePermissions.containerSecurityContext.runAsUser
