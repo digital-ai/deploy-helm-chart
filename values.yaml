@@ -819,6 +819,8 @@ centralConfiguration:
     paths: []
     emptyDirPaths: 
       - /tmp
+      - /opt/xebialabs/central-configuration-server/centralConfiguration
+      - /opt/xebialabs/central-configuration-server/conf
       - /opt/xebialabs/central-configuration-server/log
 
   ## @section Central Configuration Deploy runtime parameters
@@ -1645,7 +1647,14 @@ master:
     ## @param master.persistence.paths mounted paths for the Deploy master
     paths:
       - /opt/xebialabs/xl-deploy-server/work
-    emptyDirPaths: 
+    emptyDirPaths:
+      - /opt/xebialabs/xl-deploy-server/centralConfiguration
+      - /opt/xebialabs/xl-deploy-server/conf
+      - /opt/xebialabs/xl-deploy-server/driver/jdbc
+      - /opt/xebialabs/xl-deploy-server/driver/mq
+      - /opt/xebialabs/xl-deploy-server/export
+      - /opt/xebialabs/xl-deploy-server/node-conf
+      - /opt/xebialabs/xl-deploy-server/plugins
       - /tmp
 
   ## @section Master runtime parameters
@@ -2506,7 +2515,13 @@ worker:
     ## @param worker.persistence.paths mounted paths for the Deploy worker
     paths:
       - /opt/xebialabs/deploy-task-engine/work
-    emptyDirPaths: 
+    emptyDirPaths:
+      - /opt/xebialabs/deploy-task-engine/conf
+      - /opt/xebialabs/deploy-task-engine/driver/jdbc
+      - /opt/xebialabs/deploy-task-engine/driver/mq
+      - /opt/xebialabs/deploy-task-engine/export
+      - /opt/xebialabs/deploy-task-engine/node-conf
+      - /opt/xebialabs/deploy-task-engine/plugins
       - /tmp
 
   ## @section Worker runtime parameters
@@ -3427,7 +3442,6 @@ postgresql:
     containerSecurityContext:
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
-      seLinuxOptions: {}
       runAsUser: 0
       runAsGroup: 0
       runAsNonRoot: false
