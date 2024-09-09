@@ -64,13 +64,16 @@ spec:
     getLicense:
       enabled: true
   securityContextConstraints:
-    enabled: true
+    enabled: false
   centralConfiguration:
     replicaCount: 1
     podSecurityContext:
-      enabled: true
+      runAsUser: null
+      runAsGroup: null
+      fsGroup: null
     containerSecurityContext:
-      enabled: true   
+      runAsUser: null
+      runAsGroup: null
     volumePermissions:
       enabled: false
     diagnosticMode:
@@ -83,9 +86,12 @@ spec:
         - ReadWriteOnce
       size: '<deploy-master-storage-size>'
     podSecurityContext:
-      enabled: true
+      runAsUser: null
+      runAsGroup: null
+      fsGroup: null
     containerSecurityContext:
-      enabled: true
+      runAsUser: null
+      runAsGroup: null
     volumePermissions:
       enabled: false
     diagnosticMode:
@@ -98,9 +104,12 @@ spec:
         - ReadWriteOnce
       size: '<deploy-worker-storage-size>'
     podSecurityContext:
-      enabled: true
+      runAsUser: null
+      runAsGroup: null
+      fsGroup: null
     containerSecurityContext:
-      enabled: true
+      runAsUser: null
+      runAsGroup: null
     volumePermissions:
       enabled: false
     diagnosticMode:
@@ -129,11 +138,16 @@ spec:
         size: '<postgresql-storage-size>'
         storageClass: '<postgresql-storage-class-rwo>'
       podSecurityContext:
-        enabled: true
+        enabled: false
+        runAsUser: null
+        runAsGroup: null
+        fsGroup: null
       containerSecurityContext:
-        enabled: true
+        enabled: false
+        runAsUser: null
+        runAsGroup: null
       securityContextConstraints:
-        enabled: true
+        enabled: false
     volumePermissions:
       enabled: true
   rabbitmq:
@@ -143,10 +157,15 @@ spec:
       storageClass: '<rabbitmq-storage-class-rwo>'
     replicaCount: <rabbitmq-replica-count>
     podSecurityContext:
-      enabled: true
+      enabled: false
+      runAsUser: null
+      runAsGroup: null
+      fsGroup: null
     containerSecurityContext:
-      enabled: true
+      enabled: false
+      runAsUser: null
+      runAsGroup: null
     securityContextConstraints:
-      enabled: true
+      enabled: false
     volumePermissions:
       enabled: true
