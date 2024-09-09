@@ -504,7 +504,6 @@ Compile all warnings into a single message, and call fail.
 {{- define "deploy.validateValues" -}}
 {{- $messages := list -}}
 {{- $messages = append $messages (include "deploy.validateValues.ingress.tls" .) -}}
-{{- $messages = append $messages (include "deploy.validateValues.keystore.passphrase" .) -}}
 {{- $messages = append $messages (include "deploy.validateValues.license" .) -}}
 {{- if .Values.auth.adminPassword -}}
 {{- $messages = append $messages (include "validate.existing.secret" (dict "value" .Values.auth.adminPassword "context" $) ) -}}
@@ -531,16 +530,6 @@ deploy: ingress.tls
       - Use the `ingress.extraTls` and `ingress.secrets` parameters to provide your custom TLS certificates.
       - Relay on cert-manager to create it by setting the corresponding annotations
       - Relay on Helm to create self-signed certificates by setting `ingress.selfSigned=true`
-{{- end -}}
-{{- end -}}
-
-{{/*
-Validate values of Deploy - keystore.passphrase
-*/}}
-{{- define "deploy.validateValues.keystore.passphrase" -}}
-{{- if not .Values.keystore.passphrase }}
-deploy: keystore.passphrase
-    The `keystore.passphrase` is empty. It is mandatory to set.
 {{- end -}}
 {{- end -}}
 
