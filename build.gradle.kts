@@ -433,10 +433,6 @@ tasks {
             }
             exec {
                 workingDir(buildXldDir.get().dir("config/samples"))
-                commandLine(kustomizeCli, "edit", "add", "resource", "xld_doc.yaml")
-            }
-            exec {
-                workingDir(buildXldDir.get().dir("config/samples"))
                 commandLine(kustomizeCli, "edit", "add", "resource", "xld_minimal.yaml")
             }
             exec {
