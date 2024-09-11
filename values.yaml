@@ -817,7 +817,7 @@ centralConfiguration:
       helm.sh/resource-policy: "keep"
     ## @param centralConfiguration.persistence.paths mounted paths for the Deploy master
     paths: []
-    emptyDirPaths: 
+    emptyDirPaths:
       - /tmp
       - /opt/xebialabs/central-configuration-server/centralConfiguration
       - /opt/xebialabs/central-configuration-server/conf
@@ -1648,6 +1648,7 @@ master:
     paths:
       - /opt/xebialabs/xl-deploy-server/work
     emptyDirPaths:
+      - /opt/xebialabs/xl-deploy-server/cache
       - /opt/xebialabs/xl-deploy-server/centralConfiguration
       - /opt/xebialabs/xl-deploy-server/conf
       - /opt/xebialabs/xl-deploy-server/driver/jdbc
@@ -2516,6 +2517,7 @@ worker:
     paths:
       - /opt/xebialabs/deploy-task-engine/work
     emptyDirPaths:
+      - /opt/xebialabs/deploy-task-engine/cache
       - /opt/xebialabs/deploy-task-engine/conf
       - /opt/xebialabs/deploy-task-engine/driver/jdbc
       - /opt/xebialabs/deploy-task-engine/driver/mq
