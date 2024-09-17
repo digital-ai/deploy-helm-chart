@@ -821,7 +821,6 @@ centralConfiguration:
       - /tmp
       - /opt/xebialabs/central-configuration-server/centralConfiguration
       - /opt/xebialabs/central-configuration-server/conf
-      - /opt/xebialabs/central-configuration-server/log
 
   ## @section Central Configuration Deploy runtime parameters
   ##
