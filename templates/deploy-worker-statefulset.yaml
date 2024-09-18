@@ -219,7 +219,7 @@ spec:
           {{- end }}
           volumeMounts:
             {{- range $path := .Values.worker.persistence.emptyDirPaths }}
-            - name: data-dir
+            - name: empty-dir
               mountPath: {{ $path }}
               subPath: {{ regexFind "[^/]+$" $path }}
             {{- end }}
@@ -399,7 +399,7 @@ spec:
               readOnly: true
             {{- end }}
             {{- range $path := .Values.worker.persistence.emptyDirPaths }}
-            - name: data-dir
+            - name: empty-dir
               mountPath: {{ $path }}
               subPath: {{ regexFind "[^/]+$" $path }}
             {{- end }}
