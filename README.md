@@ -126,7 +126,7 @@ kubectl delete namespace digitalai
 | `truststore.password`                | Truststore password                                               | `nil`                                                                                                                                                                                                    |
 | `truststore.truststore`              | Truststore file base64 encoded                                    | `{}`                                                                                                                                                                                                     |
 | `truststore.params`                  | Truststore params in the command line                             | `{{- if .Values.truststore.truststore }} -Djavax.net.ssl.trustStore=$(TRUSTSTORE) -Djavax.net.ssl.trustStorePassword=$(TRUSTSTORE_PASSWORD) -Djavax.net.ssl.trustStoreType=$(TRUSTSTORE_TYPE){{- end }}` |
-| `securityContextConstraints.enabled` | Enabled SecurityContextConstraints for Deploy (only on Openshift) | `true`                                                                                                                                                                                                   |
+
 
 ### Deploy hooks
 
@@ -1003,7 +1003,6 @@ kubectl delete namespace digitalai
 | `postgresql.primary.resources.requests.cpu`             | The requested cpu for the PostgreSQL Primary containers                                 | `250m`                                                   |
 | `postgresql.primary.service.ports.postgresql`           | PostgreSQL service port                                                                 | `5432`                                                   |
 | `postgresql.primary.service.type`                       | Kubernetes Service type                                                                 | `ClusterIP`                                              |
-| `postgresql.primary.securityContextConstraints.enabled` | Enabled SecurityContextConstraints for Postgresql (only on Openshift)                   | `true`                                                   |
 
 ### Postgresql Authentication parameters
 
@@ -1049,7 +1048,6 @@ kubectl delete namespace digitalai
 | `rabbitmq.containerSecurityContext.allowPrivilegeEscalation` | Set volume permissions init container's Security Context allowPrivilegeEscalation | `false`             |
 | `rabbitmq.containerSecurityContext.capabilities`             | Set volume permissions init container's Security Context capabilities             |                     |
 | `rabbitmq.containerSecurityContext.seccompProfile`           | Set volume permissions init container's Security Context seccompProfile           |                     |
-| `rabbitmq.securityContextConstraints.enabled`                | Enabled SecurityContextConstraints for Rabbitmq (only on Openshift)               | `true`              |
 
 ### RabbitMQ Exposure parameters
 

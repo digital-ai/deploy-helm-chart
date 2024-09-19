@@ -63,8 +63,6 @@ spec:
       enabled: false
     getLicense:
       enabled: true
-  securityContextConstraints:
-    enabled: false
   centralConfiguration:
     replicaCount: 1
     podSecurityContext:
@@ -146,8 +144,6 @@ spec:
         enabled: false
         runAsUser: null
         runAsGroup: null
-      securityContextConstraints:
-        enabled: false
     volumePermissions:
       enabled: false
   rabbitmq:
@@ -165,7 +161,5 @@ spec:
       enabled: false
       runAsUser: null
       runAsGroup: null
-    securityContextConstraints:
-      enabled: false
     volumePermissions:
       enabled: false

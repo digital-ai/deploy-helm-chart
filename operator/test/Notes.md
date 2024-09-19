@@ -16,7 +16,7 @@ Nginx Ingress and Haproxy ingress are disabled and not used with installations o
 ## Installation
 
 The installation can be done using the sample configuration provided below. Please note that this is a minimal configuration and it's not recommended for production use.
-This configuration disables SCC creation and uses embedded Postgresql and RabbitMQ.
+This configuration uses embedded Postgresql and RabbitMQ.
 
 ```yaml
 apiVersion: xld.digital.ai/v1alpha1
@@ -35,8 +35,6 @@ spec:
   hooks:
     getLicense:
       enabled: true
-  securityContextConstraints:
-    enabled: false
   centralConfiguration:
     replicaCount: 1
     podSecurityContext:
@@ -103,8 +101,6 @@ spec:
         enabled: false
         runAsUser: null
         runAsGroup: null
-      securityContextConstraints:
-        enabled: false
     volumePermissions:
       enabled: false
   rabbitmq:
@@ -122,17 +118,10 @@ spec:
       enabled: false
       runAsUser: null
       runAsGroup: null
-    securityContextConstraints:
-      enabled: false
     volumePermissions:
       enabled: false
 ```
 
-If SCC is required, it must be managed manually. The necessary permissions for accessing SecurityContextConstraints must be granted when SCC is enabled; otherwise, the following error will occur:
-
-```bash 
-securitycontextconstraints.security.openshift.io \"daid-doc-digitalai-deploy-privileged\" is forbidden: User \"system:serviceaccount:openshift-operators:xld-controller-manager\" cannot get resource \"securitycontextconstraints\" in API group \"security.openshift.io\" at the cluster scope"
-```
 
 #### Configuration Details
 
@@ -149,7 +138,6 @@ The sample configuration uses:
 
 #### Security Configuration Details
 
-- `securityContextConstraints.enabled: false` - disables creation of SCCs;
 - `podSecurityContext/containerSecurityContext` - that disables the use of specific UIDs or GIDs, so the IDs can be assigned from the defined ranges (for example from restricted SCC);
 - `volumePermissions.enabled: false` - disables automatic corrections of the mounted folders.
 
