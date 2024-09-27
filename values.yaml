@@ -124,9 +124,6 @@ truststore:
   ## @param truststore.params Truststore params in the command line
   params: "{{- if .Values.truststore.truststore }} -Djavax.net.ssl.trustStore=$(TRUSTSTORE) -Djavax.net.ssl.trustStorePassword=$(TRUSTSTORE_PASSWORD) -Djavax.net.ssl.trustStoreType=$(TRUSTSTORE_TYPE){{- end }}"
 
-## @param securityContextConstraints.enabled Enabled SecurityContextConstraints for Deploy (only on Openshift)
-securityContextConstraints:
-  enabled: true
 
 ## @section Deploy hooks
 ##
@@ -3420,10 +3417,6 @@ postgresql:
       ##
       type: ClusterIP
 
-    ## @param postgresql.primary.securityContextConstraints.enabled Enabled SecurityContextConstraints for Postgresql (only on Openshift)
-    securityContextConstraints:
-      enabled: true
-
   ## @section Postgresql Authentication parameters
   ##
 
@@ -3570,10 +3563,6 @@ rabbitmq:
       - ALL
     seccompProfile:
       type: RuntimeDefault
-
-  ## @param rabbitmq.securityContextConstraints.enabled Enabled SecurityContextConstraints for Rabbitmq (only on Openshift)
-  securityContextConstraints:
-    enabled: true
 
   ## @section RabbitMQ Exposure parameters
   ##
