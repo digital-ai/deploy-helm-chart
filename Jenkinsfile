@@ -27,7 +27,7 @@ pipeline {
         stage('Lint and Unit test Deploy Helm Chart') {
             agent {
                 node {
-                    label 'xld'
+                    label 'xld && linux'
                 }
             }
 
@@ -43,7 +43,7 @@ pipeline {
         stage('Validate Readme Deploy Helm Chart') {
             agent {
                 node {
-                    label 'xld'
+                    label 'xld && linux'
                 }
             }
 
@@ -59,7 +59,7 @@ pipeline {
         stage('Build Deploy Helm Chart') {
             agent {
                 node {
-                    label 'xld'
+                    label 'xld && linux'
                 }
             }
 
@@ -76,15 +76,13 @@ pipeline {
                         env.version = currentVersion
                     }
                 }
-                sh "ls build"
-                sh "ls build/xld"
                 archiveArtifacts artifacts: 'build/xld/digitalai-deploy-*.tgz', fingerprint: true
             }
         }
         stage('Build Deploy Helm Operator Image') {
             agent {
                 node {
-                    label 'xld'
+                    label 'xld && linux'
                 }
             }
 
@@ -106,7 +104,7 @@ pipeline {
         stage('Build Deploy Helm Operator Bundle') {
             agent {
                 node {
-                    label 'xld'
+                    label 'xld && linux'
                 }
             }
 
