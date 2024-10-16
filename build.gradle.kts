@@ -232,6 +232,7 @@ tasks {
         doLast {
             exec {
                 workingDir(buildXldOperatorDir)
+                commandLine("ls", "charts")
                 commandLine("rm", "-f", "Chart.lock")
             }
         }
