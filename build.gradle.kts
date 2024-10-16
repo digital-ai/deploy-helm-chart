@@ -233,6 +233,9 @@ tasks {
             exec {
                 workingDir(buildXldOperatorDir)
                 commandLine("ls", "charts")
+            }
+            exec {
+                workingDir(buildXldOperatorDir)
                 commandLine("rm", "-f", "Chart.lock")
             }
         }

@@ -125,16 +125,16 @@ pipeline {
     post {
         success {
             script {
-                // if (env.BRANCH_NAME == 'master') {
+                if (env.BRANCH_NAME == 'master') {
                     slackSend color: "good", tokenCredentialId: "slack-token", message: "Deploy Helm Chart master build *SUCCESS* - <${env.BUILD_URL}|click to open>", channel: 'team-apollo-internal'
-                // }
+                }
             }
         }
         failure {
             script {
-                // if (env.BRANCH_NAME == 'master') {
+                if (env.BRANCH_NAME == 'master') {
                     slackSend color: "danger", tokenCredentialId: "slack-token", message: "Deploy Helm Chart master build *FAILED* - <${env.BUILD_URL}|click to open>", channel: 'team-apollo-internal'
-                // }
+                }
             }
         }
     }
