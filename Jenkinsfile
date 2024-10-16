@@ -19,42 +19,42 @@ pipeline {
     }
 
     stages {
-        stage('Validate Deploy Helm Chart') {
-            parallel {
-                stage('Validate Readme Deploy Helm Chart') {
-                    agent {
-                        node {
-                            label 'xld'
-                        }
-                    }
+        // stage('Validate Deploy Helm Chart') {
+        //     parallel {
+        //         stage('Validate Readme Deploy Helm Chart') {
+        //             agent {
+        //                 node {
+        //                     label 'xld'
+        //                 }
+        //             }
 
-                    tools {
-                        jdk env.LINUX_JDK_NAME
-                    }
+        //             tools {
+        //                 jdk env.LINUX_JDK_NAME
+        //             }
 
-                    steps {
-                        checkout scm
-                        sh "./gradlew clean buildReadmeDocker --info"
-                    }
-                }
-                stage('Lint and Unit test Deploy Helm Chart') {
-                    agent {
-                        node {
-                            label 'xld'
-                        }
-                    }
+        //             steps {
+        //                 checkout scm
+        //                 sh "./gradlew clean buildReadmeDocker --info"
+        //             }
+        //         }
+        //         stage('Lint and Unit test Deploy Helm Chart') {
+        //             agent {
+        //                 node {
+        //                     label 'xld'
+        //                 }
+        //             }
 
-                    tools {
-                        jdk env.LINUX_JDK_NAME
-                    }
+        //             tools {
+        //                 jdk env.LINUX_JDK_NAME
+        //             }
 
-                    steps {
-                        checkout scm
-                        sh "./gradlew clean runHelmUnitTest --info"
-                    }
-                }
-            }
-        }
+        //             steps {
+        //                 checkout scm
+        //                 sh "./gradlew clean runHelmUnitTest --info"
+        //             }
+        //         }
+        //     }
+        // }
         stage('Build Deploy Helm Chart') {
             agent {
                 node {

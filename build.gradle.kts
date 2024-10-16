@@ -242,7 +242,7 @@ tasks {
 
     register<Exec>("runHelmLint") {
         group = "helm-test"
-        dependsOn("prepareHelmDepsHotfix")
+        dependsOn("prepareHelmDeps", "prepareHelmDepsHotfix")
 
         commandLine(helmCli, "lint", "-f", "tests/values/basic.yaml")
 
