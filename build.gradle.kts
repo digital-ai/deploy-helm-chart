@@ -321,7 +321,7 @@ tasks {
         group = "readme"
         workingDir(layout.projectDirectory)
         commandLine("docker", "run", "-v", ".:/app/helm", "-w", "/app/helm", "xldevdocker/readme-generator-for-helm:latest", 
-            "readme-generator-for-helm", "--readme", "README.md", "--values", "values.yaml")
+            "readme-generator", "--readme", "README.md", "--values", "values.yaml")
 
         doLast {
             logger.lifecycle("Update README.md finished")
