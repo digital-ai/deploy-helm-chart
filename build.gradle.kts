@@ -87,6 +87,8 @@ enum class Arch {
 }
 
 allprojects {
+    apply(plugin = "kotlin")
+
     repositories {
         mavenLocal()
         mavenCentral()

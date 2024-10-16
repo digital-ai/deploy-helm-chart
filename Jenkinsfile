@@ -6,7 +6,7 @@ pipeline {
     agent none
 
     options {
-        buildDiscarder(logRotator(numToKeepStr: '5', artifactDaysToKeepStr: '7', artifactNumToKeepStr: '5'))
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactDaysToKeepStr: '7', artifactNumToKeepStr: '20'))
         timeout(time: 1, unit: 'HOURS')
         timestamps()
         ansiColor('xterm')
@@ -73,7 +73,7 @@ pipeline {
                 }
                 sh "ls build"
                 sh "ls build/xld"
-                archiveArtifacts artifacts: 'build/xld/digital-deploy-*.tgz', fingerprint: true
+                archiveArtifacts artifacts: 'build/xld/digitalai-deploy-*.tgz', fingerprint: true
             }
         }
         stage('Build Deploy Helm Operator Image') {
