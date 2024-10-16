@@ -282,6 +282,18 @@ tasks {
         }
     }
 
+    register<Exec>("runHelmUnitTestDocker") {
+        group = "helm-test"
+        dependsOn("runHelmLint")
+
+        workingDir(buildXldOperatorDir)
+        commandLine("docker", "run", "--rm", "-v", ".:/apps", "helmunittest/helm-unittest", "--file=../../../tests/unit/*_test.yaml", ".")
+
+        doLast {
+            logger.lifecycle("Finished running unit tests")
+        }
+    }
+
     register<Exec>("runHelmUnitTest") {
         group = "helm-test"
         dependsOn("installHelmUnitTestPlugin", "runHelmLint")
@@ -335,7 +347,7 @@ tasks {
     register<Exec>("buildReadmeDocker") {
         group = "readme"
         workingDir(layout.projectDirectory)
-        commandLine("docker", "run", "-v", ".:/app/helm", "-w", "/app/helm", "xldevdocker/readme-generator-for-helm:latest", 
+        commandLine("docker", "run", "--rm", "-v", ".:/app/helm", "-w", "/app/helm", "xldevdocker/readme-generator-for-helm:latest", 
             "readme-generator", "--readme", "README.md", "--values", "values.yaml")
 
         doLast {

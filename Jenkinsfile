@@ -32,7 +32,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "./gradlew clean runHelmUnitTest -x updateDocs -x test --info --stacktrace"
+                sh "./gradlew clean runHelmUnitTestDocker -x updateDocs -x test --info --stacktrace"
             }
         }
         // stage('Validate Readme Deploy Helm Chart') {
