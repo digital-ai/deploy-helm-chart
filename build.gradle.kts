@@ -164,6 +164,10 @@ tasks {
                 into(helmDir)
                 fileMode = 0b111101101
             }
+            exec {
+                workingDir(helmDir)
+                commandLine(helmCli, "version")
+            }
         }
     }
 
@@ -177,6 +181,10 @@ tasks {
                 into(operatorSdkDir)
                 fileMode = 0b111101101
             }
+            exec {
+                workingDir(operatorSdkDir)
+                commandLine(operatorSdkCli, "version")
+            }
         }
     }
 
@@ -189,6 +197,10 @@ tasks {
                 from(tarTree(kustomizeDir.file("kustomize.tar.gz")))
                 into(kustomizeDir)
                 fileMode = 0b111101101
+            }
+            exec {
+                workingDir(kustomizeDir)
+                commandLine(kustomizeCli, "version")
             }
         }
     }
@@ -220,10 +232,6 @@ tasks {
         into(buildXldOperatorDir)
         doFirst {
             delete(buildXldDir)
-            exec {
-                workingDir(buildXldOperatorDir)
-                commandLine(helmCli, "version")
-            }
         }
     }
 
@@ -248,7 +256,8 @@ tasks {
         group = "helm-test"
         dependsOn("prepareHelmDeps", "prepareHelmDepsHotfix")
 
-        commandLine(helmCli, "lint", "-f", "tests/values/basic.yaml")
+        workingDir(buildXldOperatorDir)
+        commandLine(helmCli, "lint", "-f", "../../../tests/values/basic.yaml")
 
         doLast {
             logger.lifecycle("Finished running helm lint")
@@ -259,6 +268,7 @@ tasks {
         group = "helm-test"
         dependsOn("prepareHelmDepsHotfix")
 
+        workingDir(buildXldOperatorDir)
         commandLine(helmCli, "plugin", "list")
 
         doLast {
@@ -276,7 +286,8 @@ tasks {
         group = "helm-test"
         dependsOn("installHelmUnitTestPlugin", "runHelmLint")
 
-        commandLine(helmCli, "unittest", "--file=tests/unit/*_test.yaml", ".")
+        workingDir(buildXldOperatorDir)
+        commandLine(helmCli, "unittest", "--file=../../../tests/unit/*_test.yaml", ".")
 
         doLast {
             logger.lifecycle("Finished running unit tests")
@@ -309,12 +320,6 @@ tasks {
 
         val targetFile = buildXldDir.get().file("config/manager/manager.yaml")
 
-        doFirst {
-            exec {
-                workingDir(buildXldOperatorDir)
-                commandLine(operatorSdkCli, "version")
-            }
-        }
         doLast {
             // config/manager/manager.yaml replace resource memory
             exec {
@@ -373,10 +378,6 @@ tasks {
         val targetWatchesFile = buildXldDir.get().dir("watches.yaml")
 
         doFirst {
-            exec {
-                workingDir(buildXldOperatorDir)
-                commandLine(kustomizeCli, "version")
-            }
             // operator/Dockerfile -> Dockerfile
             exec {
                 workingDir(buildXldDir)
@@ -448,10 +449,6 @@ tasks {
         val targetCsvFile = buildXldDir.get().dir("config/manifests/bases/xld.clusterserviceversion.yaml")
 
         doFirst {
-            exec {
-                workingDir(buildXldOperatorDir)
-                commandLine(kustomizeCli, "version")
-            }
             // config/**/*.yaml -> config
             copy {
                 from(operatorFolder)

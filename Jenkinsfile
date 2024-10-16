@@ -32,7 +32,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "./gradlew clean runHelmUnitTest -x updateDocs -x test --info"
+                sh "./gradlew clean runHelmUnitTest -x updateDocs -x test --info --stacktrace"
             }
         }
         // stage('Validate Readme Deploy Helm Chart') {
@@ -48,7 +48,7 @@ pipeline {
 
         //     steps {
         //         checkout scm
-        //         sh "./gradlew clean buildReadmeDocker -x updateDocs -x test --info"
+        //         sh "./gradlew clean buildReadmeDocker -x updateDocs -x test --info --stacktrace"
         //     }
         // }
         stage('Build Deploy Helm Chart') {
@@ -64,7 +64,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "./gradlew clean devSnapshot publish -x updateDocs -x test --info"
+                sh "./gradlew clean devSnapshot publish -x updateDocs -x test --info --stacktrace"
                 script {
                     if (fileExists('build/version.dump') == true) {
                         currentVersion = readFile 'build/version.dump'
@@ -89,7 +89,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "./gradlew clean publishOperatorToDockerHub -x updateDocs -x test --info"
+                sh "./gradlew clean publishOperatorToDockerHub -x updateDocs -x test --info --stacktrace"
                 script {
                     if (fileExists('build/version.dump') == true) {
                         currentVersion = readFile 'build/version.dump'
@@ -111,7 +111,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "./gradlew clean publishBundleToDockerHub -x updateDocs -x test --info"
+                sh "./gradlew clean publishBundleToDockerHub -x updateDocs -x test --info --stacktrace"
                 script {
                     if (fileExists('build/version.dump') == true) {
                         currentVersion = readFile 'build/version.dump'
