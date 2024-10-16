@@ -75,7 +75,7 @@ pipeline {
                         env.version = currentVersion
                     }
                 }
-                archiveArtifacts artifacts: 'build/xlr/digital-deploy-*', fingerprint: true
+                archiveArtifacts artifacts: 'build/xld/digital-deploy-*', fingerprint: true
             }
         }
         stage('Build Deploy Helm Operator Image') {
@@ -120,7 +120,7 @@ pipeline {
                         env.version = currentVersion
                     }
                 }
-                archiveArtifacts artifacts: 'build/xlr/bundle/*', fingerprint: true
+                archiveArtifacts artifacts: 'build/xld/bundle/*', fingerprint: true
             }
         }
     }
