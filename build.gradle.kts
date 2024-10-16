@@ -159,11 +159,15 @@ tasks {
         src("https://get.helm.sh/helm-v$helmVersion-$os-$arch.tar.gz")
         dest(helmDir.file("helm.tar.gz").getAsFile())
         doLast {
-           copy {
-               from(tarTree(helmDir.file("helm.tar.gz")))
-               into(helmDir)
-               fileMode = 0b111101101
-           }
+            copy {
+                from(tarTree(helmDir.file("helm.tar.gz")))
+                into(helmDir)
+                fileMode = 0b111101101
+            }
+            exec {
+                workingDir(buildXldOperatorDir)
+                commandLine(helmCli, "version")
+            }
         }
     }
 
@@ -177,6 +181,10 @@ tasks {
                 into(operatorSdkDir)
                 fileMode = 0b111101101
             }
+            exec {
+                workingDir(buildXldOperatorDir)
+                commandLine(operatorSdkCli, "version")
+            }
         }
     }
 
@@ -189,6 +197,10 @@ tasks {
                 from(tarTree(kustomizeDir.file("kustomize.tar.gz")))
                 into(kustomizeDir)
                 fileMode = 0b111101101
+            }
+            exec {
+                workingDir(buildXldOperatorDir)
+                commandLine(kustomizeCli, "version")
             }
         }
     }
