@@ -234,10 +234,6 @@ tasks {
                 workingDir(buildXldOperatorDir)
                 commandLine("ls", "charts")
             }
-            exec {
-                workingDir(buildXldOperatorDir)
-                commandLine("rm", "-f", "Chart.lock")
-            }
         }
         doLast {
             logger.lifecycle("Prepare helm deps finished")
