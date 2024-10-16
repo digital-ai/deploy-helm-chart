@@ -20,7 +20,7 @@ pipeline {
 
     parameters {
         booleanParam(name: 'RUN_BUNDLE_BUILD', defaultValue: false, description: 'If the build should run operator bundle build.')
-        stringParam(name: 'RELEASE_APP_EXPLICIT', defaultValue: getNightly(), description: 'The tag of the application images.')
+        string(name: 'RELEASE_APP_EXPLICIT', defaultValue: getNightly(), description: 'The tag of the application images.')
     }
 
     stages {
