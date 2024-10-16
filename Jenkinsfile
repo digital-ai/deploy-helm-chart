@@ -6,7 +6,7 @@ pipeline {
     agent none
 
     options {
-        buildDiscarder(logRotator(numToKeepStr: '20', artifactDaysToKeepStr: '7', artifactNumToKeepStr: '5'))
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactDaysToKeepStr: '7', artifactNumToKeepStr: '5'))
         timeout(time: 1, unit: 'HOURS')
         timestamps()
         ansiColor('xterm')
@@ -32,7 +32,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "./gradlew clean runHelmUnitTest --info"
+                sh "./gradlew clean runHelmUnitTest -x updateDocs -x test --info"
             }
         }
         // stage('Validate Readme Deploy Helm Chart') {
@@ -48,7 +48,7 @@ pipeline {
 
         //     steps {
         //         checkout scm
-        //         sh "./gradlew clean buildReadmeDocker --info"
+        //         sh "./gradlew clean buildReadmeDocker -x updateDocs -x test --info"
         //     }
         // }
         stage('Build Deploy Helm Chart') {
@@ -64,7 +64,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "./gradlew clean devSnapshot publish -x updateDocs -x buildReadme -x test --info"
+                sh "./gradlew clean devSnapshot publish -x updateDocs -x test --info"
                 script {
                     if (fileExists('build/version.dump') == true) {
                         currentVersion = readFile 'build/version.dump'
@@ -89,7 +89,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "./gradlew clean publishOperatorToDockerHub -x updateDocs -x buildReadme -x test --info"
+                sh "./gradlew clean publishOperatorToDockerHub -x updateDocs -x test --info"
                 script {
                     if (fileExists('build/version.dump') == true) {
                         currentVersion = readFile 'build/version.dump'
@@ -111,7 +111,7 @@ pipeline {
 
             steps {
                 checkout scm
-                sh "./gradlew clean publishBundleToDockerHub -x updateDocs -x buildReadme -x test --info"
+                sh "./gradlew clean publishBundleToDockerHub -x updateDocs -x test --info"
                 script {
                     if (fileExists('build/version.dump') == true) {
                         currentVersion = readFile 'build/version.dump'
@@ -125,16 +125,16 @@ pipeline {
     post {
         success {
             script {
-                if (env.BRANCH_NAME == 'master') {
-                    slackSend color: "good", tokenCredentialId: "slack-token", message: "Deploy Helm Chart master build *SUCCESS* - <${env.BUILD_URL}|click to open>", channel: 'team-apollo'
-                }
+                // if (env.BRANCH_NAME == 'master') {
+                    slackSend color: "good", tokenCredentialId: "slack-token", message: "Deploy Helm Chart master build *SUCCESS* - <${env.BUILD_URL}|click to open>", channel: 'team-apollo-internal'
+                // }
             }
         }
         failure {
             script {
-                if (env.BRANCH_NAME == 'master') {
-                    slackSend color: "danger", tokenCredentialId: "slack-token", message: "Deploy Helm Chart master build *FAILED* - <${env.BUILD_URL}|click to open>", channel: 'team-apollo'
-                }
+                // if (env.BRANCH_NAME == 'master') {
+                    slackSend color: "danger", tokenCredentialId: "slack-token", message: "Deploy Helm Chart master build *FAILED* - <${env.BUILD_URL}|click to open>", channel: 'team-apollo-internal'
+                // }
             }
         }
     }
