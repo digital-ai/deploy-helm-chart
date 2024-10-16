@@ -19,7 +19,7 @@ pipeline {
     }
 
     stages {
-        stage('Validate Deploy Helm Readme') {
+        stage('Validate Deploy Helm Chart') {
             parallel {
                 stage('Validate Readme Deploy Helm Chart') {
                     agent {
@@ -34,7 +34,7 @@ pipeline {
 
                     steps {
                         checkout scm
-                        sh "./gradlew clean buildReadme --info"
+                        sh "./gradlew clean buildReadmeDocker --info"
                     }
                 }
                 stage('Lint and Unit test Deploy Helm Chart') {
