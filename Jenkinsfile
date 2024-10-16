@@ -19,42 +19,40 @@ pipeline {
     }
 
     stages {
-        // stage('Validate Deploy Helm Chart') {
-        //     parallel {
-        //         stage('Validate Readme Deploy Helm Chart') {
-        //             agent {
-        //                 node {
-        //                     label 'xld'
-        //                 }
-        //             }
+        stage('Validate Deploy Helm Chart') {
+            stage('Lint and Unit test Deploy Helm Chart') {
+                agent {
+                    node {
+                        label 'xld'
+                    }
+                }
 
-        //             tools {
-        //                 jdk env.LINUX_JDK_NAME
-        //             }
+                tools {
+                    jdk env.LINUX_JDK_NAME
+                }
 
-        //             steps {
-        //                 checkout scm
-        //                 sh "./gradlew clean buildReadmeDocker --info"
-        //             }
-        //         }
-        //         stage('Lint and Unit test Deploy Helm Chart') {
-        //             agent {
-        //                 node {
-        //                     label 'xld'
-        //                 }
-        //             }
+                steps {
+                    checkout scm
+                    sh "./gradlew clean runHelmUnitTest --info"
+                }
+            }
+            // stage('Validate Readme Deploy Helm Chart') {
+            //     agent {
+            //         node {
+            //             label 'xld'
+            //         }
+            //     }
 
-        //             tools {
-        //                 jdk env.LINUX_JDK_NAME
-        //             }
+            //     tools {
+            //         jdk env.LINUX_JDK_NAME
+            //     }
 
-        //             steps {
-        //                 checkout scm
-        //                 sh "./gradlew clean runHelmUnitTest --info"
-        //             }
-        //         }
-        //     }
-        // }
+            //     steps {
+            //         checkout scm
+            //         sh "./gradlew clean buildReadmeDocker --info"
+            //     }
+            // }
+        }
         stage('Build Deploy Helm Chart') {
             agent {
                 node {
@@ -75,7 +73,9 @@ pipeline {
                         env.version = currentVersion
                     }
                 }
-                archiveArtifacts artifacts: 'build/xld/digital-deploy-*', fingerprint: true
+                sh "ls build"
+                sh "ls build/xld"
+                archiveArtifacts artifacts: 'build/xld/digital-deploy-*.tgz', fingerprint: true
             }
         }
         stage('Build Deploy Helm Operator Image') {
