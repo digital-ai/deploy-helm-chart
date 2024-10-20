@@ -609,11 +609,11 @@ valueFrom:
 {{- if or (not .source) (not (kindIs "map" .source)) -}}
     {{- if .value -}}
         {{- if kindIs "string" .value -}}
-            {{ .key }}: {{ .value | b64enc | quote }}
+            {{- .key }}: {{ .value | b64enc | quote -}}
         {{- end -}}
     {{- else -}}
       {{- if .default -}}
-        {{ .key }}: {{ .default | b64enc | quote }}
+        {{- .key }}: {{ .default | b64enc | quote -}}
       {{- end -}}
     {{- end -}}
 {{- end -}}
@@ -622,11 +622,16 @@ valueFrom:
 {{- define "render.value-if-not-secret-decode" -}}
     {{- if .value -}}
         {{- if kindIs "string" .value -}}
-            {{ .key }}: {{ .value | b64dec | b64enc | quote }}
+            {{- if .encode2times -}}
+                {{/* it is needed 2 times to have base64 after using the secret value in env vars */}}
+                {{- .key }}: {{ .value | b64dec | b64enc | b64enc | quote -}}
+            {{- else -}}
+                {{- .key }}: {{ .value | b64dec | b64enc | quote -}}
+            {{- end -}}
         {{- end -}}
     {{- else -}}
       {{- if .default -}}
-        {{ .key }}: {{ .default | b64dec | b64enc | quote }}
+        {{- .key }}: {{ .default | b64dec | b64enc | quote -}}
       {{- end -}}
     {{- end -}}
 {{- end -}}
@@ -634,11 +639,11 @@ valueFrom:
 {{- define "render.value-if-not-secret-binary" -}}
     {{- if .value -}}
         {{- if kindIs "string" .value -}}
-            {{ .key }}: {{ .value | b64dec | b64enc | b64enc | quote }}
+            {{- .key }}: {{ .value | b64dec | b64enc | b64enc | quote -}}
         {{- end -}}
     {{- else -}}
       {{- if .default -}}
-        {{ .key }}: {{ .default | b64dec | b64enc | b64enc | quote }}
+        {{- .key }}: {{ .default | b64dec | b64enc | b64enc | quote -}}
       {{- end -}}
     {{- end -}}
 {{- end -}}
