@@ -1645,6 +1645,7 @@ master:
     paths:
       - /opt/xebialabs/xl-deploy-server/work
     emptyDirPaths:
+      - /opt/xebialabs/xl-deploy-server/artifacts
       - /opt/xebialabs/xl-deploy-server/cache
       - /opt/xebialabs/xl-deploy-server/centralConfiguration
       - /opt/xebialabs/xl-deploy-server/conf
