@@ -1,6 +1,18 @@
-SCRIPT_DIR=$( dirname -- "$0"; )
-HELM_DIR="${SCRIPT_DIR}/.."
-## requires images helm plugin: https://github.com/nikhilsbhat/helm-images
-DEFAULT_VALUES="$1"
-shift 1
-helm images get ${DAI_RELEASE} "${HELM_DIR}" -n $DAI_NAMESPACE --values "$DEFAULT_VALUES" "$@"
+#!/bin/bash
+
+#docker run --rm \
+#  -e HOME=/opt/project \
+#  -v ./:/opt/project:rw \
+#  --entrypoint helm \
+#  xldevdocker/kuttl:latest \
+#  dependency update
+
+docker run --rm \
+  -v ./:/opt/project:rw \
+  --entrypoint helm \
+  xldevdocker/kuttl:latest \
+  images get digitalai "/opt/project" -n digitalai \
+   --values "/opt/project/tests/values/basic.yaml" \
+   --values "/opt/project/tests/values/images.yaml" \
+   -o yaml \
+   --skip ConfigMap=digitalai-digitalai-deploy-master-config,ConfigMap=digitalai-digitalai-deploy-worker-config

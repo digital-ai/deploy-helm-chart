@@ -1,0 +1,28 @@
+hooks:
+  getLicense:
+    enabled: true
+    forceExecute: true
+  genSelfSigned:
+    enabled: true
+    forceExecute: true
+centralConfiguration:
+  volumePermissions:
+    enabled: true
+master:
+  volumePermissions:
+    enabled: true
+worker:
+  volumePermissions:
+    enabled: true
+haproxy-ingress:
+  install: true
+nginx-ingress-controller:
+  install: true
+postgresql:
+  install: true
+  volumePermissions:
+    enabled: true
+rabbitmq:
+  install: true
+  volumePermissions:
+    enabled: true
