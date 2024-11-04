@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir -p ./build/scanResults
+
 docker run --rm \
   -e HOME=/opt/project \
   -v ./:/opt/project:rw \
@@ -15,4 +17,4 @@ docker run --rm \
   --values "/opt/project/tests/values/basic.yaml" \
   --values "/opt/project/tests/values/images.yaml" \
   --skip ConfigMap=digitalai-digitalai-deploy-master-config,ConfigMap=digitalai-digitalai-deploy-worker-config \
-  | grep -v xebialabs | sort | uniq
+  | grep -v xebialabs | sort | uniq > "./build/scanResults/external-dependencies-${1}.txt"
