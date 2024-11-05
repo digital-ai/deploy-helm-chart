@@ -34,6 +34,7 @@ build/
 tests/
 tests-values/
 scripts/
+.cache/
 values-*.yaml
 .env
 kubeconfig
