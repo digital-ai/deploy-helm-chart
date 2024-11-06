@@ -35,7 +35,7 @@ metadata:
   {{- end }}
 data:
     "license-status": "{{ $licenseExists }}"
-{{- if eq $licenseExists "false" }}
+{{- if or (eq $licenseExists "false") (.Values.hooks.getLicense.forceExecute | default false) }}
 ---
 kind: Role
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
@@ -116,6 +116,9 @@ spec:
               mountPath: /opt/xebialabs/xl-deploy-server/{{ $v.path }}
               subPath: {{ $v.path }}
             {{- end }}
+          {{- if .Values.master.defaultInitContainers.resources }}
+          resources: {{- toYaml .Values.master.defaultInitContainers.resources | nindent 12 }}
+          {{- end }}
       containers:
         - name: eula-install-license-job
           image: {{ template "common.images.image" ( dict "imageRoot" .Values.hooks.getLicense.image "global" .Values.global "context" .) }}
@@ -132,6 +135,9 @@ spec:
               mountPath: /opt/xebialabs/xl-deploy-server/{{ $v.path }}
               subPath: {{ $v.path }}
             {{- end }}
+          {{- if .Values.master.defaultInitContainers.resources }}
+          resources: {{- toYaml .Values.master.defaultInitContainers.resources | nindent 12 }}
+          {{- end }}
       volumes:
         - name: shared-data
           emptyDir: {}
