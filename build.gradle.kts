@@ -47,7 +47,6 @@ val helmVersion = properties["helmVersion"]
 val operatorSdkVersion = properties["operatorSdkVersion"]
 val kustomizeVersion = properties["kustomizeVersion"]
 val operatorBundleChannels = properties["operatorBundleChannels"]
-val operatorBundleDefaultChannel = properties["operatorBundleDefaultChannel"]
 val kubeRbacProxyImage = properties["kubeRbacProxyImage"]?.toString()
 val os = detectOs()
 val arch = detectHostArch()
@@ -454,7 +453,7 @@ tasks {
         dependsOn("installKustomize", "buildOperatorApiHotfix")
         workingDir(buildXldDir)
         commandLine("make", "bundle",
-            "IMG=$operatorImageUrl", "BUNDLE_GEN_FLAGS=--overwrite --version=$releasedVersion --default-channel=$operatorBundleDefaultChannel --channels=$operatorBundleChannels --package=digitalai-deploy-operator --use-image-digests",
+            "IMG=$operatorImageUrl", "BUNDLE_GEN_FLAGS=--overwrite --version=$releasedVersion --channels=$operatorBundleChannels --package=digitalai-deploy-operator --use-image-digests",
             operatorSdkCliVar, kustomizeCliVar)
 
         val sourceDockerFile = operatorFolder.resolve("bundle.Dockerfile")
