@@ -38,12 +38,9 @@ spec:
   centralConfiguration:
     replicaCount: 1
     podSecurityContext:
-      runAsUser: null
-      runAsGroup: null
-      fsGroup: null
+      enabled: false
     containerSecurityContext:
-      runAsUser: null
-      runAsGroup: null
+      enabled: false
     volumePermissions:
       enabled: false
   master:
@@ -52,12 +49,9 @@ spec:
       storageClass: ''
       size: 1Gi
     podSecurityContext:
-      runAsUser: null
-      runAsGroup: null
-      fsGroup: null
+      enabled: false
     containerSecurityContext:
-      runAsUser: null
-      runAsGroup: null
+      enabled: false
     volumePermissions:
       enabled: false
   worker:
@@ -66,12 +60,9 @@ spec:
       storageClass: ''
       size: 1Gi
     podSecurityContext:
-      runAsUser: null
-      runAsGroup: null
-      fsGroup: null
+      enabled: false
     containerSecurityContext:
-      runAsUser: null
-      runAsGroup: null
+      enabled: false
     volumePermissions:
       enabled: false
   route:
@@ -94,13 +85,8 @@ spec:
       resourcesPreset: "medium"
       podSecurityContext:
         enabled: false
-        runAsUser: null
-        runAsGroup: null
-        fsGroup: null
       containerSecurityContext:
         enabled: false
-        runAsUser: null
-        runAsGroup: null
     volumePermissions:
       enabled: false
   rabbitmq:
@@ -111,13 +97,8 @@ spec:
     replicaCount: 1
     podSecurityContext:
       enabled: false
-      runAsUser: null
-      runAsGroup: null
-      fsGroup: null
     containerSecurityContext:
       enabled: false
-      runAsUser: null
-      runAsGroup: null
     volumePermissions:
       enabled: false
 ```

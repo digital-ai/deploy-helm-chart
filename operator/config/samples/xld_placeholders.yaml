@@ -66,12 +66,9 @@ spec:
   centralConfiguration:
     replicaCount: 1
     podSecurityContext:
-      runAsUser: null
-      runAsGroup: null
-      fsGroup: null
+      enabled: false
     containerSecurityContext:
-      runAsUser: null
-      runAsGroup: null
+      enabled: false
     volumePermissions:
       enabled: false
     diagnosticMode:
@@ -84,12 +81,9 @@ spec:
         - ReadWriteOnce
       size: '<deploy-master-storage-size>'
     podSecurityContext:
-      runAsUser: null
-      runAsGroup: null
-      fsGroup: null
+      enabled: false
     containerSecurityContext:
-      runAsUser: null
-      runAsGroup: null
+      enabled: false
     volumePermissions:
       enabled: false
     diagnosticMode:
@@ -102,12 +96,9 @@ spec:
         - ReadWriteOnce
       size: '<deploy-worker-storage-size>'
     podSecurityContext:
-      runAsUser: null
-      runAsGroup: null
-      fsGroup: null
+      enabled: false
     containerSecurityContext:
-      runAsUser: null
-      runAsGroup: null
+      enabled: false
     volumePermissions:
       enabled: false
     diagnosticMode:
@@ -137,13 +128,8 @@ spec:
         storageClass: '<postgresql-storage-class-rwo>'
       podSecurityContext:
         enabled: false
-        runAsUser: null
-        runAsGroup: null
-        fsGroup: null
       containerSecurityContext:
         enabled: false
-        runAsUser: null
-        runAsGroup: null
     volumePermissions:
       enabled: false
   rabbitmq:
@@ -154,12 +140,7 @@ spec:
     replicaCount: <rabbitmq-replica-count>
     podSecurityContext:
       enabled: false
-      runAsUser: null
-      runAsGroup: null
-      fsGroup: null
     containerSecurityContext:
       enabled: false
-      runAsUser: null
-      runAsGroup: null
     volumePermissions:
       enabled: false
