@@ -48,7 +48,6 @@ val operatorSdkVersion = properties["operatorSdkVersion"]
 val kustomizeVersion = properties["kustomizeVersion"]
 val operatorBundleChannels = properties["operatorBundleChannels"]
 val operatorBundleDefaultChannel = properties["operatorBundleDefaultChannel"]
-val kubeRbacProxyImage = properties["kubeRbacProxyImage"]?.toString()
 val os = detectOs()
 val arch = detectHostArch()
 val currentTime = Instant.now().toString()
@@ -423,12 +422,6 @@ tasks {
             }
         }
         doLast {
-            if (!kubeRbacProxyImage.isNullOrBlank()) {
-                exec {
-                    workingDir(buildXldDir.get().dir("config/default"))
-                    commandLine(kustomizeCli, "edit", "set", "image", kubeRbacProxyImage)
-                }
-            }
             delete {
                 delete("${targetDockerFile}.bak")
                 delete("${targetWatchesFile}.bak")
@@ -667,7 +660,7 @@ tasks {
         dependsOn(named("docBuild"))
     }
 
-    val postgresqlSubchart = "postgresql-15.5.14.tgz"
+    val postgresqlSubchart = "postgresql-16.2.2.tgz"
 
     register("prepareHelmDepsHotfix") {
         group = "helm-hotfix"
