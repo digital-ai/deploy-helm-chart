@@ -1737,10 +1737,10 @@ master:
   ## To add more configuration, use `extraConfiguration` of `advancedConfiguration` instead
   ##
   configuration:
-    ## @extra configuration.node-conf_xl-deploy-conf-template The configuration for the xl-deploy.conf.template file
-    ## @param configuration.node-conf_xl-deploy-conf-template.path The path for the xl-deploy.conf.template file
-    ## @param configuration.node-conf_xl-deploy-conf-template.mode The access mode for the xl-deploy.conf.template file
-    ## @param configuration.node-conf_xl-deploy-conf-template.content Content of the xl-deploy.conf.template file
+    ## @extra master.configuration.node-conf_xl-deploy-conf-template The configuration for the xl-deploy.conf.template file
+    ## @param master.configuration.node-conf_xl-deploy-conf-template.path The path for the xl-deploy.conf.template file
+    ## @param master.configuration.node-conf_xl-deploy-conf-template.mode The access mode for the xl-deploy.conf.template file
+    ## @param master.configuration.node-conf_xl-deploy-conf-template.content Content of the xl-deploy.conf.template file
     node-conf_xl-deploy-conf-template:
       path: "node-conf/xl-deploy.conf.template"
       mode: 0660
