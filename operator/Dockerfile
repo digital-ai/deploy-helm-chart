@@ -20,3 +20,4 @@ LABEL name="Digital.ai Deploy Operator" \
       description="Digital.ai Deploy Operator based on helm chart from https://github.com/digital-ai/deploy-helm-chart"
 
 COPY licenses /licenses
+COPY linux-amd64/helm /usr/local/bin/helm
