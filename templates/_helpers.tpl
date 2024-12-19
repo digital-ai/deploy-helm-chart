@@ -24,7 +24,7 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{- define "deploy.names.centralConfiguration" -}}
-{{- if eq .Values.k8sSetup.platform "Openshift" -}}
+{{- if hasPrefix  "Openshift" .Values.k8sSetup.platform -}}
 {{ include "deploy.names.customname" (dict "overrideName" .Values.centralConfiguration.overrideName "suffix" "-ocp-cc-server" "context" .) }}
 {{- else -}}
 {{ include "deploy.names.customname" (dict "overrideName" .Values.centralConfiguration.overrideName "suffix" "-cc-server" "context" .) }}
@@ -32,7 +32,7 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{- define "deploy.names.master" -}}
-{{- if eq .Values.k8sSetup.platform "Openshift" -}}
+{{- if hasPrefix  "Openshift" .Values.k8sSetup.platform -}}
 {{ include "deploy.names.customname" (dict "overrideName" .Values.master.overrideName "suffix" "-ocp-master" "context" .) }}
 {{- else -}}
 {{ include "deploy.names.customname" (dict "overrideName" .Values.master.overrideName "suffix" "-master" "context" .) }}
@@ -40,7 +40,7 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{- define "deploy.names.worker" -}}
-{{- if eq .Values.k8sSetup.platform "Openshift" -}}
+{{- if hasPrefix  "Openshift" .Values.k8sSetup.platform -}}
 {{ include "deploy.names.customname" (dict "overrideName" .Values.worker.overrideName "suffix" "-ocp-worker" "context" .) }}
 {{- else -}}
 {{ include "deploy.names.customname" (dict "overrideName" .Values.worker.overrideName "suffix" "-worker" "context" .) }}

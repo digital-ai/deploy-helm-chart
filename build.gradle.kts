@@ -423,7 +423,7 @@ tasks {
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
-                    "-e", "/^#+kubebuilder:scaffold:watch.*/r $sourceWatchesFile",
+                    "-e", "/^#.+kubebuilder:scaffold:watch.*/r $sourceWatchesFile",
                     targetWatchesFile)
             }
             // operator/licenses/* -> licenses
