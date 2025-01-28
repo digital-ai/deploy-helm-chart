@@ -1,8 +1,4 @@
 
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: daid-min
-  watchDependentResources: false
   overrideValues:
     centralConfiguration.image.image: $RELATED_IMAGE_DEPLOY_CENTRAL_CONFIGURATION
     master.image.image: $RELATED_IMAGE_DEPLOY_MASTER
