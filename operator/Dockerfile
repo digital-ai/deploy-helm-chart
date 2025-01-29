@@ -14,6 +14,7 @@ USER ${USER_UID}
 
 LABEL name="Digital.ai Deploy Operator" \
       vendor="Digital.ai" \
+      maintainer="Digital.ai" \
       version="${VERSION}" \
       release="1" \
       summary="Digital.ai Deploy Operator based on helm chart" \
