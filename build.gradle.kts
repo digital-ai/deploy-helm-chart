@@ -45,6 +45,7 @@ project.defaultTasks = listOf("build")
 
 val helmVersion = properties["helmVersion"]
 val operatorSdkVersion = properties["operatorSdkVersion"]
+val openshiftPreflightVersion = properties["openshiftPreflightVersion"]
 val kustomizeVersion = properties["kustomizeVersion"]
 val operatorBundleChannels = properties["operatorBundleChannels"]
 val operatorBundleDefaultChannel = properties["operatorBundleDefaultChannel"]
@@ -145,6 +146,9 @@ tasks {
 
     val operatorImageUrl = "docker.io/$dockerHubRepository/deploy-operator:$releasedVersion"
     val bundleImageUrl = "docker.io/$releaseRepository/deploy-operator-bundle:$releasedVersion"
+    val deployCcImageUrl = "docker.io/$releaseRepository/central-configuration:$releasedAppVersion"
+    val deployMasterImageUrl = "docker.io/$releaseRepository/xl-deploy:$releasedAppVersion"
+    val deployTaskEngineImageUrl = "docker.io/$releaseRepository/deploy-task-engine:$releasedAppVersion"
     val buildXldDir = layout.buildDirectory.dir("xld")
     val buildXldOperatorDir = layout.buildDirectory.dir("xld/${project.name}")
     val operatorFolder = projectDir.resolve("operator")
@@ -152,6 +156,8 @@ tasks {
     val helmCli = helmDir.dir("$os-$arch").file("helm")
     val operatorSdkDir = layout.buildDirectory.dir("operatorSdk").get()
     val operatorSdkCli = operatorSdkDir.file("operator-sdk")
+    val openshiftPreflightDir = layout.buildDirectory.dir("openshiftPreflight").get()
+    val openshiftPreflightCli = openshiftPreflightDir.file("openshift-preflight")
     val kustomizeDir = layout.buildDirectory.dir("kustomize").get()
     val kustomizeCli = kustomizeDir.file("kustomize")
     val operatorSdkCliVar = "OPERATOR_SDK=${operatorSdkCli.toString().replace(" ", "\\ ")}"
@@ -187,6 +193,24 @@ tasks {
             exec {
                 workingDir(operatorSdkDir)
                 commandLine(operatorSdkCli, "version")
+            }
+        }
+    }
+
+    register<Download>("installOpenshiftPreflight") {
+        group = "openshift-preflight"
+        // dependsOn("installOperatorSdk")
+        src("https://github.com/redhat-openshift-ecosystem/openshift-preflight/releases/download/$openshiftPreflightVersion/preflight-${os}-$arch")
+        dest(openshiftPreflightDir.dir("install").file("openshift-preflight").getAsFile())
+        doLast {
+            copy {
+                from(openshiftPreflightDir.dir("install").file("openshift-preflight"))
+                into(openshiftPreflightDir)
+                fileMode = 0b111101101
+            }
+            exec {
+                workingDir(openshiftPreflightDir)
+                commandLine(openshiftPreflightCli, "--version")
             }
         }
     }
@@ -722,6 +746,63 @@ tasks {
         }
     }
 
+    register<Exec>("preflightCheckOperator") {
+        group = "openshift-preflight"
+        dependsOn(
+            "installOpenshiftPreflight",
+            // "publishOperatorToDockerHub",
+        )
+        workingDir(buildXldDir)
+        commandLine(openshiftPreflightCli, "check", "container", 
+            operatorImageUrl)
+
+        doLast {
+            logger.lifecycle("Openshift preflight container check $operatorImageUrl finished")
+        }
+    }
+
+    register<Exec>("preflightCheckApplication") {
+        group = "openshift-preflight"
+        dependsOn(
+            "installOpenshiftPreflight",
+        )
+        workingDir(buildXldDir)
+        commandLine(openshiftPreflightCli, "check", "container", 
+            deployMasterImageUrl)
+
+        doLast {
+            logger.lifecycle("Openshift preflight container check $deployMasterImageUrl finished")
+
+            exec {
+                workingDir(buildXldDir)
+                commandLine(openshiftPreflightCli, "check", "container", 
+                       deployCcImageUrl)
+            }
+            logger.lifecycle("Openshift preflight container check $deployCcImageUrl finished")
+
+            exec {
+                workingDir(buildXldDir)
+                commandLine(openshiftPreflightCli, "check", "container", 
+                       deployTaskEngineImageUrl)
+            }
+            logger.lifecycle("Openshift preflight container check $deployTaskEngineImageUrl finished")
+        }
+    }
+
+    register<Exec>("preflightCheckBundle") {
+        group = "openshift-preflight"
+        dependsOn(
+            "installOpenshiftPreflight",
+            // "publishBundleToDockerHub",
+        )
+        workingDir(buildXldDir)
+        commandLine(openshiftPreflightCli, "check", "operator", 
+            bundleImageUrl)
+
+        doLast {
+            logger.lifecycle("Openshift preflight operator check $bundleImageUrl finished")
+        }
+    }
 }
 
 tasks.withType<AbstractPublishToMaven> {
