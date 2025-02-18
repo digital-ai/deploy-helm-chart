@@ -361,19 +361,20 @@ spec:
             {{- include "common.tplvalues.render" (dict "value" .Values.worker.extraContainerPorts "context" $) | nindent 12 }}
             {{- end }}
           {{- if not .Values.worker.diagnosticMode.enabled }}
-          {{- if .Values.worker.health.enabled }}
-          livenessProbe:
+          {{- if .Values.worker.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.worker.livenessProbe "enabled") "context" $) | nindent 12 }}
             tcpSocket:
               port: {{ .Values.worker.services.pekko.portNames.deployPekko }}
-            initialDelaySeconds: {{ .Values.worker.health.probesLivenessTimeout }}
-            periodSeconds: {{ .Values.worker.health.periodScans }}
-            failureThreshold: {{ .Values.worker.health.probeFailureThreshold }}
-          readinessProbe:
+          {{- end }}
+          {{- if .Values.worker.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.worker.readinessProbe "enabled") "context" $) | nindent 12 }}
             tcpSocket:
               port: {{ .Values.worker.services.pekko.portNames.deployPekko }}
-            initialDelaySeconds: {{ .Values.worker.health.probesReadinessTimeout }}
-            periodSeconds: {{ .Values.worker.health.periodScans }}
-            failureThreshold: {{ .Values.worker.health.probeFailureThreshold }}
+          {{- end }}
+          {{- if .Values.worker.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.worker.startupProbe "enabled") "context" $) | nindent 12 }}
+            tcpSocket:
+              port: {{ .Values.worker.services.pekko.portNames.deployPekko }}
           {{- end }}
           {{- end }}
           {{- if .Values.worker.resources }}

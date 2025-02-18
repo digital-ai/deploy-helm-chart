@@ -512,21 +512,62 @@ centralConfiguration:
   ## @section Central configuration Statefulset parameters
   ##
 
-  ## Configure containers' extra options for liveness and readiness probe for the Deploy central configuration
+  ## Configure containers' extra options for liveness probe for the Deploy central configuration
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
-  ## @param centralConfiguration.health.enabled Enable probes
-  ## @param centralConfiguration.health.periodScans Period seconds for probe
-  ## @param centralConfiguration.health.probeFailureThreshold Failure threshold for probe
-  ## @param centralConfiguration.health.probesLivenessTimeout Initial delay seconds for livenessProbe
-  ## @param centralConfiguration.health.probesReadinessTimeout Initial delay seconds for readinessProbe
+  ## @param centralConfiguration.livenessProbe.enabled Enable livenessProbe
+  ## @param centralConfiguration.livenessProbe.path Path for livenessProbe
+  ## @param centralConfiguration.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param centralConfiguration.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param centralConfiguration.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param centralConfiguration.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param centralConfiguration.livenessProbe.successThreshold Success threshold for livenessProbe
   ##
-  health:
+  livenessProbe:
     enabled: true
-    periodScans: 10
-    probeFailureThreshold: 12
-    probesLivenessTimeout: 20
-    probesReadinessTimeout: 20
+    path: /login
+    initialDelaySeconds: 10
+    timeoutSeconds: 20
+    periodSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
 
+  ## Configure containers' extra options for readiness probe for the Deploy central configuration
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## @param centralConfiguration.readinessProbe.enabled Enable readinessProbe
+  ## @param centralConfiguration.readinessProbe.path Path for readinessProbe
+  ## @param centralConfiguration.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param centralConfiguration.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param centralConfiguration.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param centralConfiguration.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param centralConfiguration.readinessProbe.successThreshold Success threshold for readinessProbe
+  ##
+  readinessProbe:
+    enabled: true
+    path: /login
+    initialDelaySeconds: 10
+    timeoutSeconds: 20
+    periodSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+
+  ## Configure containers' extra options for startup probe for the Deploy central configuration
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## @param centralConfiguration.startupProbe.enabled Enable startupProbe
+  ## @param centralConfiguration.startupProbe.path Path for startupProbe
+  ## @param centralConfiguration.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param centralConfiguration.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param centralConfiguration.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param centralConfiguration.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param centralConfiguration.startupProbe.successThreshold Success threshold for startupProbe
+  ##
+  startupProbe:
+    enabled: true
+    path: /login
+    initialDelaySeconds: 10
+    timeoutSeconds: 20
+    periodSeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
 
   ## @param centralConfiguration.schedulerName Use an alternate scheduler, e.g. "stork".
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
@@ -1333,20 +1374,62 @@ master:
   ## @section Master Statefulset parameters
   ##
 
-  ## Configure containers' extra options for liveness and readiness probe for the Deploy master
+  ## Configure containers' extra options for liveness probe for the Deploy master
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
-  ## @param master.health.enabled Enable probes
-  ## @param master.health.periodScans Period seconds for probe
-  ## @param master.health.probeFailureThreshold Failure threshold for probe
-  ## @param master.health.probesLivenessTimeout Initial delay seconds for livenessProbe
-  ## @param master.health.probesReadinessTimeout Initial delay seconds for readinessProbe
+  ## @param master.livenessProbe.enabled Enable livenessProbe
+  ## @param master.livenessProbe.path Path for livenessProbe
+  ## @param master.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param master.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param master.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param master.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param master.livenessProbe.successThreshold Success threshold for livenessProbe
   ##
-  health:
+  livenessProbe:
     enabled: true
-    periodScans: 10
-    probeFailureThreshold: 12
-    probesLivenessTimeout: 60
-    probesReadinessTimeout: 60
+    path: 
+    initialDelaySeconds: 10
+    timeoutSeconds: 20
+    periodSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+
+  ## Configure containers' extra options for readiness probe for the Deploy master
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## @param master.readinessProbe.enabled Enable readinessProbe
+  ## @param master.readinessProbe.path Path for readinessProbe
+  ## @param master.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param master.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param master.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param master.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param master.readinessProbe.successThreshold Success threshold for readinessProbe
+  ##
+  readinessProbe:
+    enabled: true
+    path: 
+    initialDelaySeconds: 10
+    timeoutSeconds: 20
+    periodSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+
+  ## Configure containers' extra options for startup probe for the Deploy master
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## @param master.startupProbe.enabled Enable startupProbe
+  ## @param master.startupProbe.path Path for startupProbe
+  ## @param master.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param master.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param master.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param master.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param master.startupProbe.successThreshold Success threshold for startupProbe
+  ##
+  startupProbe:
+    enabled: true
+    path: 
+    initialDelaySeconds: 60
+    timeoutSeconds: 20
+    periodSeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
 
   ## @param master.schedulerName Use an alternate scheduler, e.g. "stork".
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
@@ -2235,20 +2318,57 @@ worker:
   ## @section Worker Statefulset parameters
   ##
 
-  ## Configure containers' extra options for liveness and readiness probe for the Deploy worker
+  ## Configure containers' extra options for liveness probe for the Deploy worker
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
-  ## @param worker.health.enabled Enable probes
-  ## @param worker.health.periodScans Period seconds for probe
-  ## @param worker.health.probeFailureThreshold Failure threshold for probe
-  ## @param worker.health.probesLivenessTimeout Initial delay seconds for livenessProbe
-  ## @param worker.health.probesReadinessTimeout Initial delay seconds for readinessProbe
+  ## @param worker.livenessProbe.enabled Enable livenessProbe
+  ## @param worker.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param worker.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param worker.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param worker.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param worker.livenessProbe.successThreshold Success threshold for livenessProbe
   ##
-  health:
+  livenessProbe:
     enabled: true
-    periodScans: 10
-    probeFailureThreshold: 12
-    probesLivenessTimeout: 60
-    probesReadinessTimeout: 60
+    initialDelaySeconds: 10
+    timeoutSeconds: 20
+    periodSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+
+  ## Configure containers' extra options for readiness probe for the Deploy worker
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## @param worker.readinessProbe.enabled Enable readinessProbe
+  ## @param worker.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param worker.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param worker.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param worker.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param worker.readinessProbe.successThreshold Success threshold for readinessProbe
+  ##
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    timeoutSeconds: 20
+    periodSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+
+  ## Configure containers' extra options for startup probe for the Deploy worker
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
+  ## @param worker.startupProbe.enabled Enable startupProbe
+  ## @param worker.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param worker.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param worker.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param worker.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param worker.startupProbe.successThreshold Success threshold for startupProbe
+  ##
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    timeoutSeconds: 20
+    periodSeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+
 
   ## @param worker.schedulerName Use an alternate scheduler, e.g. "stork".
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
