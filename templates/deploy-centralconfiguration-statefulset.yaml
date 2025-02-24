@@ -257,10 +257,10 @@ spec:
             {{- include "common.tplvalues.render" (dict "value" .Values.centralConfiguration.extraContainerPorts "context" $) | nindent 12 }}
             {{- end }}
           {{- if not .Values.centralConfiguration.diagnosticMode.enabled }}
-          {{- if .Values.centralConfiguration.health.enabled }}
-          livenessProbe:
+          {{- if .Values.centralConfiguration.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.centralConfiguration.livenessProbe "enabled" "path") "context" $) | nindent 12 }}
             httpGet:
-              path: /login
+              path: {{ .Values.centralConfiguration.livenessProbe.path }}
               {{- if .Values.centralConfiguration.ssl.enabled }}
               scheme: HTTPS
               port: {{ .Values.centralConfiguration.service.portNames.ccHttps }}
@@ -268,12 +268,11 @@ spec:
               scheme: HTTP
               port: {{ .Values.centralConfiguration.service.portNames.ccHttp }}
               {{- end }}
-            initialDelaySeconds: {{ .Values.centralConfiguration.health.probesLivenessTimeout }}
-            periodSeconds: {{ .Values.centralConfiguration.health.periodScans }}
-            failureThreshold: {{ .Values.centralConfiguration.health.probeFailureThreshold }}
-          readinessProbe:
+          {{- end }}
+          {{- if .Values.centralConfiguration.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.centralConfiguration.readinessProbe "enabled" "path") "context" $) | nindent 12 }}
             httpGet:
-              path: /login
+              path: {{ .Values.centralConfiguration.readinessProbe.path }}
               {{- if .Values.centralConfiguration.ssl.enabled }}
               scheme: HTTPS
               port: {{ .Values.centralConfiguration.service.portNames.ccHttps }}
@@ -281,9 +280,18 @@ spec:
               scheme: HTTP
               port: {{ .Values.centralConfiguration.service.portNames.ccHttp }}
               {{- end }}
-            initialDelaySeconds: {{ .Values.centralConfiguration.health.probesReadinessTimeout }}
-            periodSeconds: {{ .Values.centralConfiguration.health.periodScans }}
-            failureThreshold: {{ .Values.centralConfiguration.health.probeFailureThreshold }}
+          {{- end }}
+          {{- if .Values.centralConfiguration.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.centralConfiguration.startupProbe "enabled" "path") "context" $) | nindent 12 }}
+            httpGet:
+              path: {{ .Values.centralConfiguration.startupProbe.path }}
+              {{- if .Values.centralConfiguration.ssl.enabled }}
+              scheme: HTTPS
+              port: {{ .Values.centralConfiguration.service.portNames.ccHttps }}
+              {{- else }}
+              scheme: HTTP
+              port: {{ .Values.centralConfiguration.service.portNames.ccHttp }}
+              {{- end }}
           {{- end }}
           {{- end }}
           {{- if .Values.centralConfiguration.resources }}

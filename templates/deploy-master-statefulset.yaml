@@ -370,34 +370,43 @@ spec:
             {{- include "common.tplvalues.render" (dict "value" .Values.master.extraContainerPorts "context" $) | nindent 12 }}
             {{- end }}
           {{- if not .Values.master.diagnosticMode.enabled }}
-          {{- if .Values.master.health.enabled }}
-          livenessProbe:
+          {{- if .Values.master.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.master.livenessProbe "enabled" "path") "context" $) | nindent 12 }}
             {{- if .Values.ssl.enabled }}
             tcpSocket:
               port: {{ .Values.master.services.lb.portNames.deployHttps }}
             {{- else }}
             httpGet:
               scheme: HTTP
-              path: {{ .Values.appContextRoot }}
+              path: {{ .Values.appContextRoot }}/{{ .Values.master.livenessProbe.path }}
               port: {{ .Values.master.services.lb.portNames.deployHttp }}
             {{- end }}
-            initialDelaySeconds: {{ .Values.master.health.probesLivenessTimeout }}
-            periodSeconds: {{ .Values.master.health.periodScans }}
-            failureThreshold: {{ .Values.master.health.probeFailureThreshold }}
-          readinessProbe:
-            {{- if .Values.ssl.enabled }}
-            tcpSocket:
-              port: {{ .Values.master.services.lb.portNames.deployHttps }}
-            {{- else }}
-            httpGet:
-              scheme: HTTP
-              path: {{ .Values.appContextRoot }}
-              port: {{ .Values.master.services.lb.portNames.deployHttp }}
-            {{- end }}
-            initialDelaySeconds: {{ .Values.master.health.probesReadinessTimeout }}
-            periodSeconds: {{ .Values.master.health.periodScans }}
-            failureThreshold: {{ .Values.master.health.probeFailureThreshold }}
           {{- end }}
+          {{- if .Values.master.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.master.readinessProbe "enabled" "path") "context" $) | nindent 12 }}
+            {{- if .Values.ssl.enabled }}
+            tcpSocket:
+              port: {{ .Values.master.services.lb.portNames.deployHttps }}
+            {{- else }}
+            httpGet:
+              scheme: HTTP
+              path: {{ .Values.appContextRoot }}/{{ .Values.master.readinessProbe.path }}
+              port: {{ .Values.master.services.lb.portNames.deployHttp }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.master.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.master.startupProbe "enabled" "path") "context" $) | nindent 12 }}
+            {{- if .Values.ssl.enabled }}
+            tcpSocket:
+              port: {{ .Values.master.services.lb.portNames.deployHttps }}
+            {{- else }}
+            httpGet:
+              scheme: HTTP
+              path: {{ .Values.appContextRoot }}/{{ .Values.master.startupProbe.path }}
+              port: {{ .Values.master.services.lb.portNames.deployHttp }}
+            {{- end }}
+          {{- end }}
+
           {{- end }}
           {{- if .Values.master.resources }}
           resources: {{- toYaml .Values.master.resources | nindent 12 }}
