@@ -49,7 +49,6 @@ val openshiftPreflightVersion = properties["openshiftPreflightVersion"]
 val kustomizeVersion = properties["kustomizeVersion"]
 val operatorBundleChannels = properties["operatorBundleChannels"]
 val operatorBundleDefaultChannel = properties["operatorBundleDefaultChannel"]
-val kubeRbacProxyImage = properties["kubeRbacProxyImage"]?.toString()
 val os = detectOs()
 val arch = detectHostArch()
 val currentTime = Instant.now().toString()
@@ -435,7 +434,7 @@ tasks {
             exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
-                    "-e", "/^#+kubebuilder:scaffold:watch.*/r $sourceWatchesFile",
+                    "-e", "/^#.+kubebuilder:scaffold:watch.*/r $sourceWatchesFile",
                     targetWatchesFile)
             }
             // operator/licenses/* -> licenses
@@ -447,12 +446,6 @@ tasks {
             }
         }
         doLast {
-            if (!kubeRbacProxyImage.isNullOrBlank()) {
-                exec {
-                    workingDir(buildXldDir.get().dir("config/default"))
-                    commandLine(kustomizeCli, "edit", "set", "image", kubeRbacProxyImage)
-                }
-            }
             delete {
                 delete("${targetDockerFile}.bak")
                 delete("${targetWatchesFile}.bak")
