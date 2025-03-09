@@ -494,7 +494,11 @@ Return true if configured rabbitmq queue is a quorum queue
     {{- if eq "quorum" .Values.external.mq.queueType -}}
         "true"
     {{- else -}}
-        "false"
+        {{- if eq "quorum" .Values.rabbitmq.queueType -}}
+            "true"
+        {{- else -}}
+            "false"
+        {{- end -}}
     {{- end -}}
 {{- end -}}
 
