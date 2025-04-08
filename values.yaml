@@ -161,7 +161,7 @@ hooks:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.32.3-debian-12-r1
+      tag: 1.32.3-debian-12-r4
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
       ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -265,7 +265,7 @@ hooks:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.32.3-debian-12-r1
+      tag: 1.32.3-debian-12-r4
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
       ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -694,7 +694,7 @@ centralConfiguration:
     image:
       registry: docker.io
       repository: bitnami/os-shell
-      tag: 12-debian-12-r40
+      tag: 12-debian-12-r42
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -1517,7 +1517,7 @@ master:
     image:
       registry: docker.io
       repository: bitnami/os-shell
-      tag: 12-debian-12-r40
+      tag: 12-debian-12-r42
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -2375,7 +2375,7 @@ worker:
     image:
       registry: docker.io
       repository: bitnami/os-shell
-      tag: 12-debian-12-r40
+      tag: 12-debian-12-r42
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -3246,7 +3246,7 @@ nginx-ingress-controller:
   install: false
   ## @param nginx-ingress-controller.image.tag NGINX Ingress Controller image tag (immutable tags are recommended)
   image:
-    tag: 1.12.1-debian-12-r0
+    tag: 1.12.1-debian-12-r3
   ## Default 404 backend
   ##
   defaultBackend:
@@ -3412,7 +3412,7 @@ postgresql:
     enabled: true
     ## @param postgresql.volumePermissions.image.tag Init container volume-permissions image tag (immutable tags are recommended)
     image:
-      tag: 12-debian-12-r40
+      tag: 12-debian-12-r42
 
 ## @section RabbitMQ
 ##
@@ -3540,7 +3540,7 @@ rabbitmq:
     enabled: true
     ## @param rabbitmq.volumePermissions.image.tag Init container volume-permissions image tag (immutable tags are recommended)
     image:
-      tag: 12-debian-12-r40
+      tag: 12-debian-12-r42
 
     ## Init container' Security Context
     ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
