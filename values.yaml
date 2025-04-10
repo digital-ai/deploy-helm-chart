@@ -2696,6 +2696,11 @@ worker:
   ##
   jvmArgs: ""
 
+  jvm:
+    options:
+      ## @param worker.jvm.options.networkaddress.cache.ttl The Java-level namelookup cache policy for successful lookups: any negative value: caching forever; any positive value: the number of seconds to cache an address for; zero: do not cache
+      "networkaddress.cache.ttl": 30
+
   ## @param worker.command Override default container command (useful when using custom images)
   ##
   command:
