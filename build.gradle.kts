@@ -1,11 +1,3 @@
-import com.github.gradle.node.yarn.task.YarnTask
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import org.jetbrains.kotlin.de.undercouch.gradle.tasks.download.Download
-import java.io.ByteArrayOutputStream
-import org.apache.commons.lang.SystemUtils.*
-import java.time.Instant
-
 buildscript {
     repositories {
         mavenLocal()
@@ -29,13 +21,22 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "2.1.20"
 
     id("com.github.node-gradle.node") version "7.0.2"
     id("idea")
     id("nebula.release") version (properties["nebulaReleasePluginVersion"] as String)
     id("maven-publish")
+    id("de.undercouch.download") version "5.6.0"
 }
+
+import com.github.gradle.node.yarn.task.YarnTask
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.io.ByteArrayOutputStream
+import org.apache.commons.lang.SystemUtils.*
+import java.time.Instant
+import de.undercouch.gradle.tasks.download.Download
 
 apply(plugin = "ai.digital.gradle-commit")
 apply(plugin = "com.xebialabs.dependency")
@@ -119,8 +120,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
     withSourcesJar()
     withJavadocJar()
 }
@@ -136,11 +137,11 @@ tasks.withType<AbstractPublishToMaven> {
 tasks {
 
     compileKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_21.toString()
     }
 
     compileTestKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_21.toString()
     }
 
     val operatorImageUrl = "docker.io/$dockerHubRepository/deploy-operator:$releasedVersion"
