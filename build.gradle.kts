@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream
 import org.apache.commons.lang.SystemUtils.*
 import java.time.Instant
 import de.undercouch.gradle.tasks.download.Download
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 buildscript {
     repositories {
@@ -138,11 +139,11 @@ tasks.withType<AbstractPublishToMaven> {
 tasks {
 
     compileKotlin {
-        kotlinOptions.jvmTarget = languageLevel
+        compilerOptions.jvmTarget.set(JvmTarget.fromTarget(languageLevel))
     }
 
     compileTestKotlin {
-        kotlinOptions.jvmTarget = languageLevel
+        compilerOptions.jvmTarget.set(JvmTarget.fromTarget(languageLevel))
     }
 
     val operatorImageUrl = "docker.io/$dockerHubRepository/deploy-operator:$releasedVersion"
@@ -172,9 +173,9 @@ tasks {
             copy {
                 from(tarTree(helmDir.file("helm.tar.gz")))
                 into(helmDir)
-                fileMode = 0b111101101
+                filePermissions { unix("rwxr-xr-x") }
             }
-            exec {
+            project.exec {
                 workingDir(helmDir)
                 commandLine(helmCli, "version")
             }
@@ -189,9 +190,9 @@ tasks {
             copy {
                 from(operatorSdkDir.dir("operator-sdk-tool").file("operator-sdk"))
                 into(operatorSdkDir)
-                fileMode = 0b111101101
+                filePermissions { unix("rwxr-xr-x") }
             }
-            exec {
+            project.exec {
                 workingDir(operatorSdkDir)
                 commandLine(operatorSdkCli, "version")
             }
@@ -207,9 +208,9 @@ tasks {
             copy {
                 from(openshiftPreflightDir.dir("install").file("openshift-preflight"))
                 into(openshiftPreflightDir)
-                fileMode = 0b111101101
+                filePermissions { unix("rwxr-xr-x") }
             }
-            exec {
+            project.exec {
                 workingDir(openshiftPreflightDir)
                 commandLine(openshiftPreflightCli, "--version")
             }
@@ -224,9 +225,9 @@ tasks {
             copy {
                 from(tarTree(kustomizeDir.file("kustomize.tar.gz")))
                 into(kustomizeDir)
-                fileMode = 0b111101101
+                filePermissions { unix("rwxr-xr-x") }
             }
-            exec {
+            project.exec {
                 workingDir(kustomizeDir)
                 commandLine(kustomizeCli, "version")
             }
@@ -270,7 +271,7 @@ tasks {
         commandLine(helmCli, "dependency", "update", ".")
 
         doLast {
-            exec {
+            project.exec {
                 workingDir(buildXldOperatorDir)
                 commandLine("ls", "charts")
             }
@@ -362,7 +363,7 @@ tasks {
 
         doLast {
             // config/manager/manager.yaml replace resource memory
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#memory: 128Mi#memory: 512Mi#g",
@@ -412,7 +413,7 @@ tasks {
             copy {
                 from(tarTree(helmDir.file("helm.tar.gz")))
                 into(buildXldDir)
-                fileMode = 0b111101101
+                filePermissions { unix("rwxr-xr-x") }
             }
         }
     }
@@ -432,21 +433,21 @@ tasks {
 
         doFirst {
             // operator/Dockerfile -> Dockerfile
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "/^FROM.*/r $sourceDockerFile",
                     targetDockerFile)
             }
             // operator/Dockerfile replace VERSION
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${VERSION}#$releasedVersion#g",
                     targetDockerFile)
             }
             // operator/watches.yaml -> watches.yaml
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "/^#.+kubebuilder:scaffold:watch.*/r $sourceWatchesFile",
@@ -503,93 +504,93 @@ tasks {
                 into(buildXldDir)
                 duplicatesStrategy = DuplicatesStrategy.WARN
             }
-            exec {
+            project.exec {
                 workingDir(buildXldDir.get().dir("config/samples"))
                 commandLine(kustomizeCli, "edit", "add", "resource", "xld_minimal.yaml")
             }
-            exec {
+            project.exec {
                 workingDir(buildXldDir.get().dir("config/samples"))
                 commandLine(kustomizeCli, "edit", "add", "resource", "xld_placeholders.yaml")
             }
-            exec {
+            project.exec {
                 workingDir(buildXldDir.get().dir("config/default"))
                 commandLine(kustomizeCli, "edit", "remove", "resource", "../manager")
             }
-            exec {
+            project.exec {
                 workingDir(buildXldDir.get().dir("config/default"))
                 commandLine(kustomizeCli, "edit", "add", "resource", "../custom")
             }
             // config/manifests/bases/xld.clusterserviceversion.yaml replace VERSION
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${VERSION}#$releasedVersion#g",
                     targetCsvFile)
             }
             // config/manifests/bases/xld.clusterserviceversion.yaml replace APP_VERSION
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${APP_VERSION}#$releasedAppVersion#g",
                     targetCsvFile)
             }
             // config/custom/manager_config_patch.yaml replace APP_VERSION
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${APP_VERSION}#$releasedAppVersion#g",
                     buildXldDir.get().dir("config/custom/manager_config_patch.yaml"))
             }
             // config/manifests/bases/xld.clusterserviceversion.yaml replace DOCKER_HUB_REPOSITORY
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${DOCKER_HUB_REPOSITORY}#$dockerHubRepository#g",
                     targetCsvFile)
             }
             // config/custom/manager_config_patch.yaml replace DOCKER_HUB_REPOSITORY
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${DOCKER_HUB_REPOSITORY}#$dockerHubRepository#g",
                     buildXldDir.get().dir("config/custom/manager_config_patch.yaml"))
             }
             // config/manifests/bases/xld.clusterserviceversion.yaml replace CONTAINER_IMAGE
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${CONTAINER_IMAGE}#$operatorImageUrl#g",
                     targetCsvFile)
             }
             // config/manifests/bases/xld.clusterserviceversion.yaml replace CURRENT_TIME
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "s#\${CURRENT_TIME}#$currentTime#g",
                     targetCsvFile)
             }
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("$operatorFolder/scripts/generate_skip_versions.sh", releasedVersion, targetCsvFile)
             }
         }
         doLast {
             // bundle.Dockerfile -> bundle.Dockerfile
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "/^LABEL operators.operatorframework.io.test.config.*/r $sourceDockerFile",
                     targetDockerFile)
             }
             // annotations.yaml -> bundle/annotations.yaml
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "/^.*operators.operatorframework.io.test.config.v1.*/r $sourceAnnotationsFile",
                     targetAnnotationsFile)
             }
             // bundle/annotations.yaml remove empty lines
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine("sed", "-i.bak",
                     "-e", "/^\$/d",
@@ -818,14 +819,14 @@ tasks {
         doLast {
             logger.lifecycle("Openshift preflight container check $deployMasterImageUrl finished")
 
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine(openshiftPreflightCli, "check", "container", 
                        deployCcImageUrl)
             }
             logger.lifecycle("Openshift preflight container check $deployCcImageUrl finished")
 
-            exec {
+            project.exec {
                 workingDir(buildXldDir)
                 commandLine(openshiftPreflightCli, "check", "container", 
                        deployTaskEngineImageUrl)
