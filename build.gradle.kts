@@ -294,7 +294,7 @@ tasks {
 
     register<Exec>("installHelmUnitTestPlugin") {
         group = "helm-test"
-
+        dependsOn("prepareHelmDeps")
         workingDir(buildXldOperatorDir)
         commandLine(helmCli, "plugin", "list")
 
