@@ -280,7 +280,7 @@ tasks {
 
     register<Exec>("runHelmLint") {
         group = "helm-test"
-        dependsOn("prepareHelmDeps", "prepareHelmDepsHotfix")
+        dependsOn("prepareHelmDeps")
 
         workingDir(buildXldOperatorDir)
         commandLine(helmCli, "lint", "-f", "../../../tests/values/basic.yaml")
@@ -292,8 +292,7 @@ tasks {
 
     register<Exec>("installHelmUnitTestPlugin") {
         group = "helm-test"
-        dependsOn("prepareHelmDepsHotfix")
-
+        dependsOn("prepareHelmDeps")
         workingDir(buildXldOperatorDir)
         commandLine(helmCli, "plugin", "list")
 
@@ -334,7 +333,7 @@ tasks {
 
     register<Exec>("buildHelmPackage") {
         group = "helm"
-        dependsOn("prepareHelmDepsHotfix")
+        dependsOn("prepareHelmDeps")
         workingDir(buildXldDir)
         commandLine(helmCli, "package", "--app-version=$releasedAppVersion", project.name)
 
@@ -417,7 +416,7 @@ tasks {
 
     register<Exec>("buildOperatorImage") {
         group = "operator"
-        dependsOn("installKustomize", "buildOperatorApiHotfix", "downloadHelm")
+        dependsOn("installKustomize", "buildOperatorApi", "downloadHelm")
         workingDir(buildXldDir)
         commandLine("make", "docker-build",
             "IMG=$operatorImageUrl", operatorSdkCliVar, kustomizeCliVar)
@@ -481,7 +480,7 @@ tasks {
 
     register<Exec>("buildOperatorBundle") {
         group = "operator-bundle"
-        dependsOn("installKustomize", "buildOperatorApiHotfix")
+        dependsOn("installKustomize", "buildOperatorApi")
         workingDir(buildXldDir)
         commandLine("make", "bundle",
             "IMG=$operatorImageUrl", "BUNDLE_GEN_FLAGS=--overwrite --version=$releasedVersion --channels=$operatorBundleChannels --package=digitalai-deploy-operator --use-image-digests",
@@ -699,94 +698,6 @@ tasks {
     register<GenerateDocumentation>("updateDocs") {
         group = "docusaurus"
         dependsOn(named("docBuild"))
-    }
-
-    register("prepareHelmDepsHotfix") {
-        group = "helm-hotfix"
-        dependsOn(
-            named("prepareHelmDeps")
-        )
-    }
-
-    // hotfix operator
-    val operatorChartDir = layout.buildDirectory.dir("xld/helm-charts/digitalai-deploy/charts")
-
-    // postgresql
-    val postgresqlSubchart = "postgresql-16.6.6.tgz"
-    val postgresqlOperatorChart = operatorChartDir.get().file(postgresqlSubchart)
-
-    register<Exec>("hotfixPostgresqlOperatorChart") {
-        group = "operator-hotfix"
-        dependsOn(named("buildOperatorApi"))
-        doFirst {
-            copy {
-                from(tarTree(postgresqlOperatorChart))
-                into(operatorChartDir.get())
-            }
-            delete(postgresqlOperatorChart)
-        }
-        workingDir(operatorChartDir.get())
-        commandLine("yq", "-i",
-            ".volumePermissions.containerSecurityContext.seLinuxOptions=null", "postgresql/values.yaml")
-
-        doLast {
-            logger.lifecycle("Hotfix Postgresql operator helm chart")
-        }
-    }
-
-    register<Tar>("hotfixPostgresqlOperatorChartPackage") {
-        group = "operator-hotfix"
-        dependsOn(named("hotfixPostgresqlOperatorChart"))
-        from(operatorChartDir)
-        include("postgresql/**")
-        archiveFileName.set(postgresqlSubchart)
-        destinationDirectory.set(file(operatorChartDir))
-        compression = Compression.GZIP
-    }
-
-    // rabbitmq
-    val rabbitmqSubchart = "rabbitmq-15.5.3.tgz"
-    val rabbitmqOperatorChart = operatorChartDir.get().file(rabbitmqSubchart)
-
-    register<Exec>("hotfixRabbitmqOperatorChart") {
-        group = "operator-hotfix"
-        dependsOn(named("buildOperatorApi"))
-        doFirst {
-            copy {
-                from(tarTree(rabbitmqOperatorChart))
-                into(operatorChartDir.get())
-            }
-            delete(rabbitmqOperatorChart)
-        }
-        workingDir(operatorChartDir.get())
-        commandLine("yq", "-i",
-            ".volumePermissions.containerSecurityContext.seLinuxOptions=null", "rabbitmq/values.yaml")
-
-        doLast {
-            logger.lifecycle("Hotfix Rabbitmq operator helm chart")
-        }
-    }
-
-    register<Tar>("hotfixRabbitmqOperatorChartPackage") {
-        group = "operator-hotfix"
-        dependsOn(named("hotfixRabbitmqOperatorChart"))
-        from(operatorChartDir)
-        include("rabbitmq/**")
-        archiveFileName.set(rabbitmqSubchart)
-        destinationDirectory.set(file(operatorChartDir))
-        compression = Compression.GZIP
-    }
-
-    register("buildOperatorApiHotfix") {
-        group = "operator-hotfix"
-        dependsOn(
-            named("hotfixPostgresqlOperatorChartPackage"),
-            named("hotfixRabbitmqOperatorChartPackage"),
-            named("buildOperatorApi")
-        )
-        doLast {
-            delete(operatorChartDir.get().dir("postgresql"))
-        }
     }
 
     register<Exec>("preflightCheckOperator") {
