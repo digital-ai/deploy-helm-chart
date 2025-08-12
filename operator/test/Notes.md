@@ -24,6 +24,9 @@ kind: DigitalaiDeploy
 metadata:
   name: daid-min
 spec:
+  global:
+    security:
+      allowInsecureImages: true
   k8sSetup:
     platform: Openshift
   auth:
