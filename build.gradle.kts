@@ -32,7 +32,7 @@ buildscript {
 plugins {
     kotlin("jvm") version "2.1.20"
 
-    id("com.github.node-gradle.node") version "7.0.2"
+    id("com.github.node-gradle.node") version "7.1.0"
     id("idea")
     id("nebula.release") version (properties["nebulaReleasePluginVersion"] as String)
     id("maven-publish")
@@ -52,6 +52,8 @@ val openshiftPreflightVersion = properties["openshiftPreflightVersion"]
 val kustomizeVersion = properties["kustomizeVersion"]
 val operatorBundleChannels = properties["operatorBundleChannels"]
 val operatorBundleDefaultChannel = properties["operatorBundleDefaultChannel"]
+val nodeVersion = properties["nodeVersion"] as String
+val yarnVersion = properties["yarnVersion"] as String
 
 val os = detectOs()
 val arch = detectHostArch()
