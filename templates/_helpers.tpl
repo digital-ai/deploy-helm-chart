@@ -694,3 +694,18 @@ true
     {{- end -}}
   {{- end -}}
 {{- end }}
+
+{{/*
+Prepend the app context root to always start with "/"
+
+Usage:
+{{ include "deploy.contextRoot" .Values.appContextRoot }}
+*/}}
+{{- define "deploy.contextRoot" -}}
+{{- $contextRoot := . | toString | trim -}}
+{{- if hasPrefix "/" $contextRoot -}}
+{{- $contextRoot -}}
+{{- else -}}
+{{- printf "/%s" $contextRoot -}}
+{{- end -}}
+{{- end -}}
