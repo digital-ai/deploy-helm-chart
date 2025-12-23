@@ -337,7 +337,7 @@ spec:
               value: {{ .Values.worker.services.pekko.ports.deployPekko | quote }}
             {{- end }}
             - name: APP_CONTEXT_ROOT
-              value: {{ .Values.appContextRoot }}
+              value: {{ include "deploy.contextRoot" .Values.appContextRoot }}
             - name: NETWORK_ADDRESS_CACHE_TTL
               value: {{ (index .Values.worker.jvm.options "networkaddress.cache.ttl") | quote }}              
             - name: DEPLOYIT_SERVER_OPTS_EXT
