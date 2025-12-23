@@ -337,7 +337,7 @@ spec:
               value: {{ .Values.ssl.keystoreType }}
             {{- end }}
             - name: APP_CONTEXT_ROOT
-              value: {{ .Values.appContextRoot }}
+              value: {{ include "deploy.contextRoot" .Values.appContextRoot }}
             - name: NETWORK_ADDRESS_CACHE_TTL
               value: {{ (index .Values.master.jvm.options "networkaddress.cache.ttl") | quote }}
             - name: DEPLOYIT_SERVER_OPTS_EXT
@@ -378,7 +378,7 @@ spec:
             {{- else }}
             httpGet:
               scheme: HTTP
-              path: {{ .Values.appContextRoot }}
+              path: {{ include "deploy.contextRoot" .Values.appContextRoot }}
               port: {{ .Values.master.services.lb.portNames.deployHttp }}
             {{- end }}
             initialDelaySeconds: {{ .Values.master.health.probesLivenessTimeout }}
@@ -391,7 +391,7 @@ spec:
             {{- else }}
             httpGet:
               scheme: HTTP
-              path: {{ .Values.appContextRoot }}
+              path: {{ include "deploy.contextRoot" .Values.appContextRoot }}
               port: {{ .Values.master.services.lb.portNames.deployHttp }}
             {{- end }}
             initialDelaySeconds: {{ .Values.master.health.probesReadinessTimeout }}
