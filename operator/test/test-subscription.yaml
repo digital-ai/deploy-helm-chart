@@ -7,5 +7,5 @@ spec:
   channel: beta
   installPlanApproval: Automatic
   name: xld
-  source: deploy-test-operators-25-1
+  source: deploy-test-operators-26-1
   sourceNamespace: openshift-marketplace
