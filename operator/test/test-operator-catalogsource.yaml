@@ -1,12 +1,12 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
-  name: deploy-test-operators-26-1
+  name: deploy-test-operators-26-3
   namespace: openshift-marketplace
 spec:
   sourceType: grpc
-  image: docker.io/xebialabsunsupported/deploy-operator-index:26.1
-  displayName: Digital.ai Deploy Test 26.1 Operators
+  image: docker.io/xebialabsunsupported/deploy-operator-index:26.3
+  displayName: Digital.ai Deploy Test 26.3 Operators
   publisher: Digital.ai
   updateStrategy:
     registryPoll:
