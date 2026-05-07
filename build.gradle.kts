@@ -309,7 +309,7 @@ tasks {
         dependsOn("prepareHelmDeps")
 
         workingDir(buildXldOperatorDir)
-        commandLine(helmCli, "lint", "-f", "../../../tests/values/basic.yaml")
+        commandLine(helmCli, "lint", ".", "-f", "../../../tests/values/basic.yaml")
 
         doLast {
             logger.lifecycle("Finished running helm lint")
