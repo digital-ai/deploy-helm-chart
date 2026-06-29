@@ -115,17 +115,6 @@ spec:
     path: /
   route:
     enabled: false
-  haproxy-ingress:
-    controller:
-      ingressClass: haproxy-dai-xld
-    install: false
-  nginx-ingress-controller:
-    extraArgs:
-      ingress-class: nginx-dai-xld
-    ingressClassResource:
-      controllerClass: k8s.io/ingress-nginx-dai-xld
-      name: nginx-dai-xld
-    install: false
   postgresql:
     global:
       storageClass: "local-path"

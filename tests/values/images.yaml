@@ -14,10 +14,6 @@ master:
 worker:
   volumePermissions:
     enabled: true
-haproxy-ingress:
-  install: true
-nginx-ingress-controller:
-  install: true
 postgresql:
   install: true
   volumePermissions:

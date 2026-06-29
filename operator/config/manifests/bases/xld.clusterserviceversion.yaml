@@ -44,15 +44,12 @@ spec:
     ## About this Operator
 
     Digital.ai Deploy operator is based on helm chart that is available from [here](https://github.com/digital-ai/deploy-helm-chart).
-    The operator includes subcharts which are dependencies for the Deploy containers to run successfully. 
-    Nginx Ingress and Haproxy ingress are disabled and not used with installations on the Openshift (and the images are not used in the installation)
+    The operator includes subcharts which are dependencies for the Deploy containers to run successfully.
 
     ### Subcharts include:
 
     - [PostgresSQL](https://github.com/bitnami/charts/tree/main/bitnami/postgresql)
     - [RabbitMQ](https://github.com/bitnami/charts/tree/main/bitnami/rabbitmq)
-    - [Nginx Ingress controller](https://github.com/bitnami/charts/tree/main/bitnami/nginx-ingress-controller)
-    - [Haproxy Ingress controller](https://github.com/jcmoraisjr/haproxy-ingress/)
 
     ## Installation
 

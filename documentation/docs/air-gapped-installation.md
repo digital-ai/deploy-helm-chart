@@ -65,15 +65,6 @@ For example, for version 23.1.x, following is the list of the images that you wi
 - docker.io/xebialabs/deploy-operator:23.1.x
 - gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
 
-#### If you are using nginx include
-
-- docker.io/bitnami/nginx:1.22.1-debian-11-r44
-- docker.io/bitnami/nginx-ingress-controller:1.6.4-debian-11-r5
-
-#### If you are using haproxy include
-
-- quay.io/jcmoraisjr/haproxy-ingress:v0.14.2
-
 #### If you are using embedded keycloak include
 
 - docker.io/jboss/keycloak:17.0.1
@@ -202,11 +193,6 @@ During upgrade for the question `Edit list of custom resource keys that will mig
 ### For Default image registry
 ```
 .spec.TinyToolsImageRepository
-.spec.nginx-ingress-controller.defaultBackend.image.registry
-.spec.nginx-ingress-controller.defaultBackend.image.repository
-.spec.nginx-ingress-controller.image.registry
-.spec.nginx-ingress-controller.image.repository
-.spec.haproxy-ingress.controller.image.repository
 .spec.keycloak.image.repository
 .spec.keycloak.postgresql.image.registry
 .spec.keycloak.postgresql.image.repository
@@ -221,10 +207,6 @@ During upgrade for the question `Edit list of custom resource keys that will mig
 ### For custom docker registry (public)
 ```
 .spec.TinyToolsImageRepository
-.spec.nginx-ingress-controller.defaultBackend.image.repository
-.spec.nginx-ingress-controller.image.repository
-.spec.nginx-ingress-controller.global.imageRegistry
-.spec.haproxy-ingress.controller.image.repository
 .spec.keycloak.image.repository
 .spec.keycloak.postgresql.image.registry
 .spec.keycloak.postgresql.image.repository
@@ -238,10 +220,6 @@ During upgrade for the question `Edit list of custom resource keys that will mig
 ### For custom docker registry (private)
 ```
 .spec.TinyToolsImageRepository
-.spec.nginx-ingress-controller.defaultBackend.image.repository
-.spec.nginx-ingress-controller.image.repository
-.spec.nginx-ingress-controller.global.imageRegistry
-.spec.haproxy-ingress.controller.image.repository
 .spec.keycloak.image.repository
 .spec.keycloak.postgresql.image.registry
 .spec.keycloak.postgresql.image.repository
@@ -265,19 +243,6 @@ During upgrade for the question `Edit list of custom resource keys that will mig
 - spec.WorkerImageRepository: "myrepo_host/myrepo/deploy-task-engine"
 - spec.TinyToolsImageRepository: "myrepo_host/myrepo/tiny-tools"
 - spec.ImagePullSecret: regcred (only for custom private image registry requiring authentication)
-
-#### If you are using nginx
-
-- spec.nginx-ingress-controller.defaultBackend.image.registry: myrepo_host
-- spec.nginx-ingress-controller.defaultBackend.image.repository: myrepo/nginx
-- spec.nginx-ingress-controller.image.registry: myrepo_host
-- spec.nginx-ingress-controller.image.repository: myrepo/nginx-ingress-controller
-- spec.nginx-ingress-controller.imagePullSecrets.[0]: regcred (only for custom private image registry requiring authentication)
-
-#### If you are using haproxy
-
-- spec.haproxy-ingress.controller.image.repository: myrepo_host/myrepo/haproxy-ingress
-- spec.haproxy-ingress.imagePullSecrets[0].name: regcred (only for custom private image registry requiring authentication)
 
 #### If you are using embedded keycloak
 
