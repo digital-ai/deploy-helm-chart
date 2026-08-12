@@ -132,28 +132,18 @@ Get the password secret.
     {{- end -}}
 {{- end -}}
 
-{{/*
-Remove Nginx regex from path.
-*/}}
+{{/* Return normalized path suffix (e.g. "/xld/") for ingress/route URLs, or empty if root path or no ingress/route */}}
 {{- define "deploy.path.fullname" -}}
-    {{- if and .Values.ingress.enabled }}
-        {{- $ingressclass := index .Values "ingress" "annotations" "kubernetes.io/ingress.class" }}
-        {{- if contains $ingressclass "nginx" }}
-            {{- $name := ( split "(" .Values.ingress.path)._0 }}
-            {{- if $name }}
-                {{- printf "%s/" $name }}
-            {{- else }}
-                {{- print "" }}
-            {{- end }}
-        {{- else -}}
-            {{- printf "%s/" .Values.ingress.path }}
-        {{- end -}}
-    {{- else -}}
-        {{- if .Values.route.enabled }}
-            {{- printf "%s/" .Values.route.path }}
-        {{- else -}}
-            {{- print "" }}
-        {{- end -}}
+    {{- $path := "" -}}
+    {{- if .Values.ingress.enabled -}}
+        {{- $path = (default "/" .Values.ingress.path) -}}
+    {{- else if .Values.route.enabled -}}
+        {{- $path = (default "/" .Values.route.path) -}}
+    {{- end -}}
+    {{- if and $path (ne $path "/") -}}
+        {{/* Strip regex patterns (e.g., "/xld(.*)" to "/xld") and include trailing slash */}}
+        {{- $path = (split "(" $path)._0 | trimSuffix "/" -}}
+        {{- printf "%s/" (default "" $path) -}}
     {{- end -}}
 {{- end -}}
 
@@ -161,44 +151,17 @@ Remove Nginx regex from path.
 Get the server URL
 */}}
 {{- define "deploy.serverUrl" -}}
-    {{- $protocol := "http" }}
-    {{- if .Values.ingress.enabled }}
-        {{- if or .Values.ingress.tls .Values.ssl.enabled }}
-            {{- $protocol = "https" }}
-        {{- end }}
-        {{- $ingressclass := index .Values "ingress" "annotations" "kubernetes.io/ingress.class" }}
-        {{- $hostname := .Values.ingress.hostname }}
-        {{- if and (contains $ingressclass "nginx") (ne .Values.ingress.path "/") }}
-            {{- $path := include "deploy.path.fullname" $ }}
-            {{- if $path }}
-                {{- printf "%s://%s%s" $protocol $hostname $path }}
-            {{- else }}
-                {{- printf "%s://%s" $protocol $hostname }}
-            {{- end }}
-        {{- else }}
-            {{- printf "%s://%s" $protocol $hostname }}
-        {{- end }}
+    {{- $protocol := "http" -}}
+    {{- if or .Values.ingress.tls .Values.ingress.extraTls .Values.route.tls.enabled .Values.ssl.enabled  -}}
+        {{- $protocol = "https" -}}
+    {{- end -}}
+    {{- if .Values.ingress.enabled -}}
+        {{- printf "%s://%s%s" $protocol .Values.ingress.hostname (include "deploy.path.fullname" .) -}}
+    {{- else if .Values.route.enabled -}}
+        {{- printf "%s://%s%s" $protocol .Values.route.hostname (include "deploy.path.fullname" .) -}}
     {{- else -}}
-        {{- if .Values.route.enabled }}
-            {{- if or .Values.route.tls.enabled .Values.ssl.enabled }}
-                {{- $protocol = "https" }}
-            {{- end }}
-            {{- $hostname := .Values.route.hostname }}
-            {{- $path := include "deploy.path.fullname" $ }}
-            {{- if $path }}
-                {{- printf "%s://%s%s" $protocol $hostname $path }}
-            {{- else }}
-                {{- printf "%s://%s" $protocol $hostname }}
-            {{- end }}
-        {{- else -}}
-            {{- $path := include "deploy.path.fullname" $ }}
-            {{- if $path }}
-                {{- printf "%s://%s%s" ( include "deploy.masterLbUrlWithoutPort" . ) $path }}
-            {{- else }}
-                {{- printf "%s://%s" ( include "deploy.masterLbUrlWithoutPort" . ) }}
-            {{- end }}
-        {{- end }}
-    {{- end }}
+        {{- printf "%s%s" (include "deploy.masterLbUrlWithoutPort" .) (include "deploy.path.fullname" .) -}}
+    {{- end -}}
 {{- end -}}
 
 {{/*
@@ -545,7 +508,7 @@ Compile all warnings into a single message, and call fail.
 Validate values of Deploy - TLS configuration for Ingress
 */}}
 {{- define "deploy.validateValues.ingress.tls" -}}
-{{- if and .Values.ingress.enabled .Values.ingress.tls (not (include "common.ingress.certManagerRequest" ( dict "annotations" .Values.ingress.annotations ))) (not .Values.ingress.selfSigned) (empty .Values.ingress.extraTls) }}
+{{- if and .Values.ingress.enabled .Values.ingress.tls (not (include "common.ingress.certManagerRequest" ( dict "annotations" (default dict .Values.ingress.annotations) ))) (not .Values.ingress.selfSigned) (empty .Values.ingress.extraTls) }}
 deploy: ingress.tls
     You enabled the TLS configuration for the default ingress hostname but
     you did not enable any of the available mechanisms to create the TLS secret
