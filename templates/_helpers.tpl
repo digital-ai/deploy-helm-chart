@@ -152,7 +152,7 @@ Get the server URL
 */}}
 {{- define "deploy.serverUrl" -}}
     {{- $protocol := "http" -}}
-    {{- if or .Values.ingress.tls .Values.ssl.enabled .Values.route.tls.enabled -}}
+    {{- if or .Values.ingress.tls .Values.ingress.extraTls .Values.route.tls.enabled .Values.ssl.enabled  -}}
         {{- $protocol = "https" -}}
     {{- end -}}
     {{- if .Values.ingress.enabled -}}
