@@ -193,9 +193,9 @@ Get the server URL
         {{- else -}}
             {{- $path := include "deploy.path.fullname" $ }}
             {{- if $path }}
-                {{- printf "%s://%s%s" ( include "deploy.masterLbUrlWithoutPort" . ) $path }}
+                {{- printf "%s%s" (include "deploy.masterLbUrlWithoutPort" .) $path }}
             {{- else }}
-                {{- printf "%s://%s" ( include "deploy.masterLbUrlWithoutPort" . ) }}
+                {{- include "deploy.masterLbUrlWithoutPort" . }}
             {{- end }}
         {{- end }}
     {{- end }}
